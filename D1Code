@@ -1,6 +1,6 @@
 //This code is written in C, and is intended to be used with the Arduino IDE
 
-//The code's function is to connect a D1 Mini to a wifi network, connect to MQTT via mosquitto, then subscribe to a specified topic.
+//The code's function is to connect a D1 Mini to a wifi network, connect to MQTT, then subscribe to a specified topic.
 
 //Once subscribed, the D1 mini will constantly look for new messages being published to the topic. If a certain message(in this case "reset")
 // is published to the topic, the D1 Mini will send a signal to a 5V relay, cutting power to the load(RaspberryPi) for 5 seconds. After 5 seconds, the 
