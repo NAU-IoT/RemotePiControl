@@ -20,7 +20,7 @@ This solution can also be done using a RaspberryPiZero, which is also documented
     
 # RaspberryPIZero Solution
 
-If you want to run the code on a RaspberryPi Zero these are the steps:
+If you want to run C code on a RaspberryPiZero these are the steps:
 
 - SSH into the Rpi Zero
 - Create a new script using nano (or any text editor)
