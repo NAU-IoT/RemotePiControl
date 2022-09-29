@@ -20,7 +20,7 @@ const char* WIFI_SSID = "YourOwnNetwork";
 const char* WIFI_PASSWORD = "YourOwnPassword";
 
 //mqtt info
-const char* mqtt_server = "test.mosquitto.org"; // can change to your own server
+const char* mqtt_server = "test.mosquitto.org"; // can change to your own server, can be d1 IP address, just make sure when subsribing, use sub -h (d1 IP)
 const char* topic = "RemotePiReset";
 const char* test_message = "Hello from D1mini";
 
