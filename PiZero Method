@@ -1,13 +1,8 @@
-// This is the code that is extremely similar to the D1 Mini Code, but this is to be ran on a RaspberryPiZero
+// This is the code that is to be ran on a RaspberryPiZero
 
 // Code:
 
-#include <ESP8266WiFi.h>
 #include <PubSubClient.h>
-
-//set wifi credentials
-const char* WIFI_SSID = "YourOwnNetwork";
-const char* WIFI_PASSWORD = "YourOwnPassword";
 
 //mqtt info
 const char* mqtt_server = "test.mosquitto.org"; // can change to your own server, can be d1 IP address, just make sure when subsribing, use sub -h (d1 IP)
