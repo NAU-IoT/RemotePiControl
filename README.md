@@ -43,7 +43,7 @@ To install:
     
 
 
-
+Running The Script:
 
 - SSH into the Rpi Zero
 - Create a new script using nano (or any text editor)
