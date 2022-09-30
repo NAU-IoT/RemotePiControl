@@ -48,7 +48,7 @@ Running The Script:
 - SSH into the Rpi Zero
 - Create a new script using nano (or any text editor)
 - Write in source code (found repository under PiZero Method)
-- Save your {YourFile}.c
+- Save file as {YourFile}.c
 - Compile using:    gcc {YourFile}.c
 - If there are no errors, specify executable file:  gcc {YourFile}.c  -o {YourFile}
 - Verify that the file is executable (permissions)
