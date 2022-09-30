@@ -22,7 +22,7 @@ This solution can also be done using a RaspberryPiZero, which is also documented
     
 ## RaspberryPIZero Solution
 
-If you want to run C code on a RaspberryPiZero these are the steps:
+If you want to run MQTT using C code on a RaspberryPiZero these are the steps:
 
 ### Dependencies:
 
