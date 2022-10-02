@@ -43,7 +43,8 @@ After installing dependencies:
 - Create script using nano
 - Write source code into new script (code can be found in PiZeroMethod)
 - Save file as {YourFileName}.py
-- 
+- Verify that permissions are set so that the script is executable by typing `chmod +x SCRIPTNAME.py` in the command line
+- Type `./{YourFileName}.py` into the command line to execute the script
 
 
 
