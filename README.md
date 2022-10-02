@@ -22,35 +22,28 @@ This solution can also be done using a RaspberryPiZero, which is also documented
     
 ## RaspberryPIZero Solution
 
-If you want to run MQTT using C code on a RaspberryPiZero these are the steps:
+If you want to run MQTT using python on a RaspberryPiZero these are the steps:
 
 ### Dependencies:
 
-**Install paho.mqtt.c library**
+Install the paho.mqtt library:
 
-To build:
-    
-    git clone https://github.com/eclipse/paho.mqtt.c.git
-    
-    cd org.eclipse.paho.mqtt.c.git
-   
-    make
-    
-To install:
+`git clone https://github.com/eclipse/paho.mqtt.python`
 
-    sudo make install
-    
-    
+`cd paho.mqtt.python`
+
+`python3 setup.py install`
+
+Install the GPIO package:
+
+`apt-get install rpi.gpio`
+
+After installing dependencies: 
+
+- Create script using nano
+- Write source code into new script (code can be found in PiZeroMethod)
+- Save file as {YourFileName}.py
+- 
 
 
-Running The Script:
-
-- SSH into the Rpi Zero
-- Create a new script using nano (or any text editor)
-- Write in source code (found repository under PiZero Method)
-- Save file as {YourFile}.c
-- Compile using:    gcc {YourFile}.c
-- If there are no errors, specify executable file:  gcc {YourFile}.c  -o {YourFile}
-- Verify that the file is executable (permissions)
-- Run file by using ./{YourFile}
 
