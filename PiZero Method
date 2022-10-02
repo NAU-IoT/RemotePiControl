@@ -2,3 +2,41 @@
 
 // Code:
 
+import paho.mqtt.client as mqtt
+import RPi.GPIO as io
+import time
+
+ResetPin = 3
+
+io.setup(ResetPin, io.OUT)
+
+def on_connect(client, userdata, flags, rc):
+    print(f"Connected with result code {rc}")
+    # subscribe, which need to put into on_connect
+    # if reconnect after losing the connection with the broker, it will continu>
+    client.subscribe("RemotePiReset")
+
+# the callback function, it will be triggered when receiving messages
+def on_message(client, userdata, msg):
+    print(f"{msg.topic} {msg.payload}")
+    if msg.payload.decode() == "reset":
+        io.output(ResetPin, True)
+        time.sleep(5)
+        io.output(ResetPin, False)
+        print("RaspberryPi has been reset")
+        client.disconnect()
+
+
+
+client = mqtt.Client()
+client.on_connect = on_connect
+client.on_message = on_message
+
+# set the will message, when the Raspberry Pi is powered off, or the network is>
+client.will_set('RemotePiReset', b'{"status": "Off"}')
+
+# create connection, the three parameters are broker address, broker port numbe>
+client.connect("192.168.1.244", 1883, 60)
+
+# set the network loop blocking, it will not actively end the program before ca>
+client.loop_forever()
