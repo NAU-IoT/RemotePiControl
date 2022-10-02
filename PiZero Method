@@ -2,6 +2,8 @@
 
 // Code:
 
+#! /usr/bin/python
+
 import paho.mqtt.client as mqtt
 import RPi.GPIO as io
 import time
