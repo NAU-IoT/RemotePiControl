@@ -8,9 +8,12 @@ import paho.mqtt.client as mqtt
 import RPi.GPIO as io
 import time
 
-ResetPin = 3
-
+io.setmode(io.BCM)
+io.setwarnings(False)
+io.cleanup()
+ResetPin = 22
 io.setup(ResetPin, io.OUT)
+
 
 def on_connect(client, userdata, flags, rc):
     print(f"Connected with result code {rc}")
@@ -26,8 +29,6 @@ def on_message(client, userdata, msg):
         time.sleep(5)
         io.output(ResetPin, False)
         print("RaspberryPi has been reset")
-        client.disconnect()
-
 
 
 client = mqtt.Client()
@@ -38,7 +39,7 @@ client.on_message = on_message
 client.will_set('RemotePiReset', b'{"status": "Off"}')
 
 # create connection, the three parameters are broker address, broker port numbe>
-client.connect("192.168.1.244", 1883, 60)
+client.connect("test.mosquitto.org", 1883, 60)
 
 # set the network loop blocking, it will not actively end the program before ca>
 client.loop_forever()
