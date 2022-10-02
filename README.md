@@ -21,7 +21,10 @@ This solution can also be done using a RaspberryPiZero, which is also documented
     
    
 Steps:
-- Paste source code into Arduino IDE (found in D1Mini)
+- Copy source code into Arduino IDE (found in D1Code)
+- Upload onto D1MiniPro
+- Wire D1Mini to other components
+- Done!
     
     
 ## RaspberryPIZero Solution
@@ -63,6 +66,7 @@ After installing dependencies:
 - Save file as {YourFileName}.py
 - Verify that permissions are set so that the script is executable by typing `chmod +x SCRIPTNAME.py` in the command line
 - Type `./{YourFileName}.py` into the command line to execute the script
+
 
 
 
