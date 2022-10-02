@@ -24,6 +24,7 @@ Steps:
 - Copy source code into Arduino IDE (found in D1Code)
 - Upload onto D1MiniPro
 - Wire D1Mini to other components
+- Publish reset command to topic from broker
 - Done!
     
     
@@ -66,6 +67,8 @@ After installing dependencies:
 - Save file as {YourFileName}.py
 - Verify that permissions are set so that the script is executable by typing `chmod +x SCRIPTNAME.py` in the command line
 - Type `./{YourFileName}.py` into the command line to execute the script
+- Publish reset command to topic from broker
+- Done!
 
 
 
