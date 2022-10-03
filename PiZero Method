@@ -1,20 +1,19 @@
-// This is the code that is to be ran on a RaspberryPiZero
+# This is the code that is to be ran on a RaspberryPiZero
+# Code:
 
-// Code:
+#! /usr/bin/python  #this makes the script executable in the command line with ./
 
-#! /usr/bin/python
-
-import paho.mqtt.client as mqtt
-import RPi.GPIO as io
+import paho.mqtt.client as mqtt     #import paho module
+import RPi.GPIO as io               #import GPIO module
 import time
 
-io.setmode(io.BCM)
-io.setwarnings(False)
-io.cleanup()
-ResetPin = 22
-io.setup(ResetPin, io.OUT)
+io.setmode(io.BCM)          #set board type for GPIO module
+io.setwarnings(False)       #turn off warnings
+io.cleanup()                #erase any previous instances of GPIO module
+ResetPin = 22               #set ResetPin as 22
+io.setup(ResetPin, io.OUT)  #set pin IO 22 as output (not actually pin 22, IO22, which is pin 15 on PiZero)
 
-
+# define on_connect function
 def on_connect(client, userdata, flags, rc):
     print(f"Connected with result code {rc}")
     # subscribe, which need to put into on_connect
@@ -24,13 +23,14 @@ def on_connect(client, userdata, flags, rc):
 # the callback function, it will be triggered when receiving messages
 def on_message(client, userdata, msg):
     print(f"{msg.topic} {msg.payload}")
-    if msg.payload.decode() == "reset":
+    if msg.payload.decode() == "reset":     #execute the Pi reset if reset is published to topic
         io.output(ResetPin, True)
         time.sleep(5)
         io.output(ResetPin, False)
         print("RaspberryPi has been reset")
 
 
+#create client instance
 client = mqtt.Client()
 client.on_connect = on_connect
 client.on_message = on_message
