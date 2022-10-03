@@ -38,8 +38,14 @@ client.on_message = on_message
 # set the will message, when the Raspberry Pi is powered off, or the network is>
 client.will_set('RemotePiReset', b'{"status": "Off"}')
 
+#establish tls set for secure connection over port 8883
+client.tls_set(ca_certs="/home/pi/RemotePiReset/ca.crt",
+               certfile="/home/pi/RemotePiReset/RemotePiReset.crt",
+               keyfile="/home/pi/RemotePiReset/RemotePiReset.key")
+
+
 # create connection, the three parameters are broker address, broker port numbe>
-client.connect("test.mosquitto.org", 1883, 60)
+client.connect("test.mosquitto.org", 8883, 60)
 
 # set the network loop blocking, it will not actively end the program before ca>
 client.loop_forever()
