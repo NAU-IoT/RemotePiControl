@@ -3,6 +3,8 @@ This repository contains code to be uploaded onto a D1 Mini Pro to facilitate a 
 
 This solution can also be done using a RaspberryPiZero, which is also documented here.
 
+This solution is intended to be ran as the root user.
+
 ## D1MiniPro Solution
 
 ### Components:
