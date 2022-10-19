@@ -68,6 +68,7 @@ After installing dependencies:
 - Write source code into new script (code can be found in PiZeroMethod)
 - Save file as {YourFileName}.py
 - Verify that permissions are set so that the script is executable by typing `chmod +x SCRIPTNAME.py` in the command line
+- Use command `sudo su` to get root user permissions (script only works when ran with root permissions)
 - Type `./{YourFileName}.py` into the command line to execute the script
 - Publish reset command to topic from broker
 - Done!
