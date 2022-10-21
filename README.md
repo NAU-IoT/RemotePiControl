@@ -71,7 +71,9 @@ Steps:
 - Ensure keyfile has the correct permissions for the user to run the script without error
    - If getting error "Error: Problem setting TLS options: File not found." use command `sudo chmod 640 YourKeyFile.key` (sets permissions so that the user and group are able to read the keyfile)    
 - Type `./{YourFileName}.py` into the command line to execute the script
-- Publish reset command to topic from broker using command `mosquitto_pub --cafile YOUR_CAFILE.crt --cert YOUR_CERTFILE.crt --key YOUR_KEYFILE.key -p 8883 -d -h YOUR_BROKER_IP -t YOUR_TOPIC -m "reset"`
+- Publish reset command to topic from client using command:
+   
+   `mosquitto_pub --cafile YOUR_CAFILE.crt --cert YOUR_CERTFILE.crt --key YOUR_KEYFILE.key -p 8883 -d -h YOUR_BROKER_IP -t YOUR_TOPIC -m "reset"`
 - Done!
 
 
