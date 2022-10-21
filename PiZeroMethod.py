@@ -1,51 +1,47 @@
-# This is the code that is to be ran on a RaspberryPiZero
-# Code:
+#! /usr/bin/python
 
-#! /usr/bin/python  #this makes the script executable in the command line with ./
-
-import paho.mqtt.client as mqtt     #import paho module
-import RPi.GPIO as io               #import GPIO module
+import paho.mqtt.client as mqtt
+import RPi.GPIO as io
 import time
 
-io.setmode(io.BCM)          #set board type for GPIO module
-io.setwarnings(False)       #turn off warnings
-io.cleanup()                #erase any previous instances of GPIO module
-ResetPin = 22               #set ResetPin as 22
-io.setup(ResetPin, io.OUT)  #set pin IO 22 as output (not actually pin 22, IO22, which is pin 15 on PiZero)
+#define the topic
+topic = "[YOUR TOPIC HERE]"
 
-# define on_connect function
+io.setmode(io.BCM)
+io.setwarnings(False)
+io.cleanup()
+ResetPin = 22   #IO pin 22 not actually pin 22 (actually pin 15 on PiZero)
+io.setup(ResetPin, io.OUT)
+
 def on_connect(client, userdata, flags, rc):
     print(f"Connected with result code {rc}")
-    # subscribe, which need to put into on_connect
-    # if reconnect after losing the connection with the broker, it will continu>
-    client.subscribe("RemotePiReset")
+    # subscribe to the specified topic
+    client.subscribe(topic)
 
 # the callback function, it will be triggered when receiving messages
 def on_message(client, userdata, msg):
-    print(f"{msg.topic} {msg.payload}")
-    if msg.payload.decode() == "reset":     #execute the Pi reset if reset is published to topic
+    if msg.payload.decode() == "reset":
         io.output(ResetPin, True)
+        print("RaspberryPi is being reset")
         time.sleep(5)
         io.output(ResetPin, False)
         print("RaspberryPi has been reset")
 
 
-#create client instance
 client = mqtt.Client()
 client.on_connect = on_connect
 client.on_message = on_message
 
-# set the will message, when the Raspberry Pi is powered off, or the network is>
-client.will_set('RemotePiReset', b'{"status": "Off"}')
+# set the will message, when the Raspberry Pi is powered off, or the network is interrupted
+client.will_set(topic, b'{"status": "Off"}')
 
 #establish tls set for secure connection over port 8883
-client.tls_set(ca_certs="/home/pi/RemotePiReset/ca.crt",
-               certfile="/home/pi/RemotePiReset/RemotePiReset.crt",
-               keyfile="/home/pi/RemotePiReset/RemotePiReset.key")
+client.tls_set(ca_certs="/SOME/PATH/TO/ca.crt", #change path and central authority cert as necessary
+               certfile="/SOME/PATH/TO/server.crt", #change path and certfile as necessary
+               keyfile="/SOME/PATH/TO/server.key") #change path and keyfile as necessary
 
-
-# create connection, the three parameters are broker address, broker port numbe>
-client.connect("test.mosquitto.org", 8883, 60)
+# create connection, the three parameters are broker address, broker port number, keepalive (only broker address and broker port number are required)
+client.connect("[YOUR BROKER IP]", 8883, 60)
 
 # set the network loop blocking, it will not actively end the program before ca>
 client.loop_forever()
