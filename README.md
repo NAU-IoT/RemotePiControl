@@ -66,7 +66,7 @@ After installing dependencies:
 Steps:
 - Create script to run code with command `nano YourFileName.py`
 - Paste code from github file PiZeroMethod.py into your script
-- Change code according to your implementation, I.E. etc... (Lines , , , , )
+- Change code according to your implementation, I.E. etc... (Lines 8, 39, 40, 41, 44)
 - Verify that permissions are set so that the script is executable by typing `chmod +x SCRIPTNAME.py` in the command line
 - Ensure keyfile has the correct permissions for the user to run the script without error
    - If getting error "Error: Problem setting TLS options: File not found." use command `sudo chmod 640 YourKeyFile.key` (sets permissions so that the user and group are able to read the keyfile)    
