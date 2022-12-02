@@ -49,19 +49,16 @@ The principal is the exact same as the D1Mini solution, but the D1Mini is subsit
 
 ### Dependencies:
 
-Install the paho.mqtt library:
+- Install the paho.mqtt library:
+   - `git clone https://github.com/eclipse/paho.mqtt.python`
+   - `cd paho.mqtt.python`
+   - `python3 setup.py install`
 
-`git clone https://github.com/eclipse/paho.mqtt.python`
-
-`cd paho.mqtt.python`
-
-`python3 setup.py install`
-
-Install the GPIO package:
-
-On Raspbian: `apt-get install rpi.gpio`
-
-On Ubuntu: `sudo apt install python3-lgpio`
+- Install the GPIO package:
+   - On Raspbian: `apt-get install rpi.gpio`
+   - On Ubuntu: `sudo apt install python3-lgpio`
+   
+- Install the pytz timezone library: `pip install pytz`
 
 After installing dependencies: 
 
