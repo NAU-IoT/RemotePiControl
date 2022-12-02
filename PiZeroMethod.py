@@ -1,47 +1,62 @@
 #! /usr/bin/python
 
 import paho.mqtt.client as mqtt
-import RPi.GPIO as io
+import lgpio
+from pythonping import ping
 import time
+import RPRConfiguration as config
 
-#define the topic
-topic = "[YOUR TOPIC HERE]"
+#import variables from config file
+ResetPin = config.resetpin #establishes reset pin
+Topic = config.topic    #establishes topic
+SystemUnderTest = config.client #establishes system under test
+Broker = config.broker #establishes broker
+CA_Certs = config.cacert 
+Certfile = config.certfile
+Keyfile = config.keyfile
 
-io.setmode(io.BCM)
-io.setwarnings(False)
-io.cleanup()
-ResetPin = 22   #IO pin 22 not actually pin 22 (actually pin 15 on PiZero)
-io.setup(ResetPin, io.OUT)
+h = lgpio.gpiochip_open(0)      #enable gpio
+lgpio.gpio_claim_output(h, ResetPin) #set reset pin as output
+
 
 def on_connect(client, userdata, flags, rc):
     print(f"Connected with result code {rc}")
-    # subscribe to the specified topic
-    client.subscribe(topic)
+    # subscribe, which need to put into on_connect
+    # if reconnect after losing the connection with the broker
+    client.subscribe(Topic)
 
 # the callback function, it will be triggered when receiving messages
 def on_message(client, userdata, msg):
+#    print(f"{msg.topic} {msg.payload}")
     if msg.payload.decode() == "reset":
-        io.output(ResetPin, True)
-        print("RaspberryPi is being reset")
-        time.sleep(5)
-        io.output(ResetPin, False)
-        print("RaspberryPi has been reset")
+        ts = time.ctime()
+        print(" ")
+        print("Reset executed at: ",ts) #print time stamp when reset occurs
+        print(" ")
+        lgpio.gpio_write(h, ResetPin, 1) #set reset pin high
+        string1 = "{} is being reset".format(SystemUnderTest) #formats string with hostname
+        print(string1) #prints string 1 with hostname
+        time.sleep(5) #wait 5 seconds
+        lgpio.gpio_write(h, ResetPin, 0) #set reset pin low
+        string2 = "{} has been reset".format(SystemUnderTest) #formats string with hostname
+        print(string2)
+        ping(SystemUnderTest, verbose=True, count = 12, interval = 3)
 
 
 client = mqtt.Client()
 client.on_connect = on_connect
 client.on_message = on_message
 
-# set the will message, when the Raspberry Pi is powered off, or the network is interrupted
-client.will_set(topic, b'{"status": "Off"}')
+# set the will message, when the Raspberry Pi is powered off, or the network is turned off
+client.will_set(Topic, b'{"status": "Off"}')
 
 #establish tls set for secure connection over port 8883
-client.tls_set(ca_certs="/SOME/PATH/TO/ca.crt", #change path and central authority cert as necessary
-               certfile="/SOME/PATH/TO/server.crt", #change path and certfile as necessary
-               keyfile="/SOME/PATH/TO/server.key") #change path and keyfile as necessary
+#client.tls_set(ca_certs=CA_Certs,
+#               certfile=Certfile,
+#               keyfile=Keyfile)
 
-# create connection, the three parameters are broker address, broker port number, keepalive (only broker address and broker port number are required)
-client.connect("[YOUR BROKER IP]", 8883, 60)
+# create connection
+client.connect(Broker, 1883, 60) #if using TLS, Broker is the common name on the server cert
 
-# set the network loop blocking, it will not actively end the program before ca>
+#loop code
 client.loop_forever()
