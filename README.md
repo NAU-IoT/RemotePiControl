@@ -67,10 +67,10 @@ After installing dependencies:
 
 Steps:
 - Create script to run code with command `nano YourFileName.py`
-- Paste code from github file Pi4Method.py into your script
+   - Paste code from github file Pi4Method.py into your script
 - Create configuration script to easily modify variables within the code `touch PMConfiguration.py`
-- Paste code from github file RPRConfiguration.py
-  - Change variable names according to your implementation
+   - Paste code from github file RPRConfiguration.py
+      - Change variable names according to your implementation
 - Verify that permissions are set so that the script is executable by typing `chmod +x SCRIPTNAME.py` in the command line
 - To use TLS set, uncomment lines 53-56 and change 1883 to 8883 on line 59
 - IF USING TLS SET: ensure keyfile has the correct permissions for the user to run the script without error
