@@ -3,6 +3,8 @@
 import paho.mqtt.client as mqtt
 import lgpio
 from pythonping import ping
+from datetime import datetime
+import pytz
 import time
 import RPRConfiguration as config
 
@@ -14,6 +16,7 @@ Broker = config.broker #establishes broker
 CA_Certs = config.cacert 
 Certfile = config.certfile
 Keyfile = config.keyfile
+Timezone = config.timezone
 
 h = lgpio.gpiochip_open(0)      #enable gpio
 lgpio.gpio_claim_output(h, ResetPin) #set reset pin as output
@@ -29,7 +32,7 @@ def on_connect(client, userdata, flags, rc):
 def on_message(client, userdata, msg):
 #    print(f"{msg.topic} {msg.payload}")
     if msg.payload.decode() == "reset":
-        ts = time.ctime()
+        ts = datetime.now(pytz.timezone(Timezone))
         print(" ")
         print("Reset executed at: ",ts) #print time stamp when reset occurs
         print(" ")
