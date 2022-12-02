@@ -85,7 +85,4 @@ Steps:
 
 - Done!
 
-Notes:
-- The printed timezone will be with respect to the location that is specified when the OS is written to the Pi's SD Card.
-
 
