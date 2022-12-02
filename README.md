@@ -33,19 +33,19 @@ Steps:
 
 ### Components:
 
-**RaspberryPiZero**
+**Raspberry Pi 4**
 
    Used to interpret reset command over MQTT and send resetting signal to relay
     
-**RASPBERRY PI**
+**RASPBERRY PI IO Board**
 
    Wired through the relay, this is what is being reset
     
 **5V RELAY**
 
-   Wired so that when the PiZero sends the reset signal, the relay cuts power to the Rpi for 5 seconds.
+   Wired so that when the Pi 4 sends the reset signal, the relay cuts power to the IO Board for 5 seconds.
 
-The principal is the exact same as the D1Mini solution, but the D1Mini is subsituted with the RaspberryPiZero. If you want to run MQTT using python on a RaspberryPiZero these are the steps:
+The principal is the exact same as the D1Mini solution, but the D1Mini is subsituted with the Raspberry Pi 4. If you want to run MQTT using python on a Raspberry Pi 4 these are the steps:
 
 ### Dependencies:
 
@@ -59,16 +59,21 @@ Install the paho.mqtt library:
 
 Install the GPIO package:
 
-`apt-get install rpi.gpio`
+On Raspbian: `apt-get install rpi.gpio`
+
+On Ubuntu: `sudo apt install python3-lgpio`
 
 After installing dependencies: 
 
 Steps:
 - Create script to run code with command `nano YourFileName.py`
-- Paste code from github file PiZeroMethod.py into your script
-- Change code according to your implementation, I.E. etc... (Lines 8, 39, 40, 41, 44)
+- Paste code from github file Pi4Method.py into your script
+- Create configuration script to easily modify variables within the code `touch PMConfiguration.py`
+- Paste code from github file RPRConfiguration.py
+  - Change variable names according to your implementation
 - Verify that permissions are set so that the script is executable by typing `chmod +x SCRIPTNAME.py` in the command line
-- Ensure keyfile has the correct permissions for the user to run the script without error
+- To use TLS set, uncomment lines 53-56 and change 1883 to 8883 on line 59
+- IF USING TLS SET: ensure keyfile has the correct permissions for the user to run the script without error
    - If getting error "Error: Problem setting TLS options: File not found." use command `sudo chmod 640 YourKeyFile.key` (sets permissions so that the user and group are able to read the keyfile)    
 - Type `./{YourFileName}.py` into the command line to execute the script
 - Publish reset command to topic from client using command:
