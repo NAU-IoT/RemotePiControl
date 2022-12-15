@@ -1,11 +1,11 @@
 [Unit]
 After=network.service
-Description=Remote Pi Reset
+Description= Remote Pi Reset
 
 [Service]
 Type=simple
 # WorkingDirectory=/code/python/myapp
-ExecStart=/home/mwc72/RemotePiReset/Systemctl/RemotePiReset.sh
+ExecStart=/SOME/PATH/TO//EXEC.sh #path to the executable file that calls the service
 # User=do-user
 
 [Install]
