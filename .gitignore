@@ -1,3 +1,3 @@
-logs/*
-Systemctl/*
+logs/
+Systemctl/
 RPRConfiguration.py
