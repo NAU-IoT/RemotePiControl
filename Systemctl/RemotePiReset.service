@@ -5,7 +5,7 @@ Description=Remote Pi Reset
 [Service]
 Type=simple
 # WorkingDirectory=/code/python/myapp
-ExecStart=/home/mwc72/RemotePiReset/RemotePiReset.sh
+ExecStart=/home/mwc72/RemotePiReset/Systemctl/RemotePiReset.sh
 # User=do-user
 
 [Install]
