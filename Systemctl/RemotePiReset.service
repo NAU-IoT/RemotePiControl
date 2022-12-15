@@ -1,0 +1,13 @@
+[Unit]
+After=network.service
+Description=Remote Pi Reset
+
+[Service]
+Type=simple
+# WorkingDirectory=/code/python/myapp
+ExecStart=/home/mwc72/RemotePiReset/RemotePiReset.sh
+# User=do-user
+
+[Install]
+WantedBy=multi-user.target
+# WantedBy=default.target
