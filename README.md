@@ -48,6 +48,36 @@ Steps:
 The principal is the exact same as the D1Mini solution, but the D1Mini is subsituted with the Raspberry Pi 4. If you want to run MQTT using python on a Raspberry Pi 4 these are the steps:
 
 ### Dependencies:
+ - Install mosquitto service 
+    - `sudo apt-get install mosquitto mosquitto-clients`
+    - `sudo systemctl enable mosquitto`
+    - check if mosquitto is running `sudo systemctl status mosquitto`
+- Create your own mosquitto configuration file
+   - `cd /etc/mosquitto/conf.d`
+   - `sudo nano YOUR_FILE_NAME.conf`
+   - paste these lines for insecure connection:
+        
+       ```
+       allow_anonymous true
+        
+       listener 1883
+       ```
+   - paste these lines for secure connection:
+       
+       ```
+       allow_anonymous true
+        
+       listener 8883
+        
+       require_certificate true
+       
+       cafile /SOME/PATH/TO/ca.crt
+        
+       certfile /SOME/PATH/TO/server.crt
+        
+       keyfile /SOME/PATH/TO/server.key
+       ``` 
+   - *refer to https://mosquitto.org/man/mosquitto-conf-5.html for conf file documentation*
 
 - Install the paho.mqtt library:
    - `git clone https://github.com/eclipse/paho.mqtt.python`
