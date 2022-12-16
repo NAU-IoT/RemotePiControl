@@ -1,4 +1,4 @@
 #!/bin/bash
 
 #cd /home/mwc72/RemotePiReset
-python3 /home/mwc72/RemotePiReset/RemotePiReset.py >> /home/mwc72/RemotePiReset/logs/RemotePiReset.log 2>&1
+python3 /SOME/PATH/TO/RemotePiReset.py >> /SOME/PATH/TO/logs/RemotePiReset.log 2>&1
