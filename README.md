@@ -60,7 +60,7 @@ The principal is the exact same as the D1Mini solution, but the D1Mini is subsit
    
 - Install the pytz timezone library: `pip install pytz`
 
-- Install the pythonping library: `pip install pythonping`
+- Install the pythonping library: `sudo pip install pythonping`
 
 After installing dependencies: 
 
