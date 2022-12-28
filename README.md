@@ -116,3 +116,9 @@ After installing dependencies:
 - Done!
 
 
+### Implementing the script as a service
+  
+  - Create logs directory inside of the RemotePiReset directory `mkdir logs`
+  - Modify RemotePiReset.sh to include the correct paths (located inside of the Systemctl directory) `nano RemotePiReset.sh`
+  - 
+
