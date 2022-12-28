@@ -58,7 +58,19 @@ def on_message(client, userdata, msg):
         lgpio.gpio_write(h, ResetPin, 0) #set reset pin low
         string2 = "{} has been reset".format(SystemUnderTest) #formats string with hostname
         logging.debug(string2)
-        logging.debug(ping(SystemUnderTest, verbose=True, count = 12, interval = 3))
+        logging.debug("Please wait while the reset is confirmed...")
+        try:
+            result = ping(SystemUnderTest, verbose=False, count = 12, interval = 3)
+            # the machine responds the ICMP request
+            if result.success():
+                 logging.debug("{} ICMP_REPLIED".format(SystemUnderTest))
+            #the machine does NOT respond the ICMP request
+            else:
+                 logging.debug("{} ICMP_IGNORED".format(SystemUnderTest))
+        # no DNS resolution for host
+        except socket.error:
+            #pass
+            logging.debug("{} DNS_NO_RESOLUTION".format(SystemUnderTest))
         logging.debug("-"*100)
 
 client.on_connect = on_connect
