@@ -102,7 +102,7 @@ After installing dependencies:
 - Change into RemotePiReset directory `cd RemotePiReset`
 - Change PRPConfiguration.py variable names and paths according to your implementation `nano RPRConfiguration.py`
 - Verify that permissions are set so that the script is executable by typing `chmod +x RemotePiReset.py` in the command line
-- To use TLS set, uncomment lines 53-56 and change 1883 to 8883 on line 59
+- To use TLS set, uncomment lines 71-73 and change 1883 to 8883 on line 76
 - IF USING TLS SET: ensure keyfile has the correct permissions for the user to run the script without error
    - If getting error "Error: Problem setting TLS options: File not found." use command `sudo chmod 640 YourKeyFile.key` (sets permissions so that the user and group are able to read the keyfile)    
 - Type `./RemotePiReset.py` into the command line to execute the script
