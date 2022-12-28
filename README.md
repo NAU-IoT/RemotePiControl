@@ -118,7 +118,27 @@ After installing dependencies:
 
 ### Implementing the script as a service
   
+  - Create a systemd entry 
+      - Change into Systemctl directory `cd RemotePiReset/Systemctl` 
+      - Modify line 8 of RemotePiReset.service to reflect the correct path `nano RemotePiReset.service`
+      - Copy the .service file to correct location `sudo cp RemotePiReset.service /etc/systemd/system`
   - Create logs directory inside of the RemotePiReset directory `mkdir logs`
   - Modify RemotePiReset.sh to include the correct paths (located inside of the Systemctl directory) `nano RemotePiReset.sh`
-  - 
+  - Set file permissions for RemotePiReset.sh `sudo chmod 744 RemotePiReset/Systemctl/RemotePiReset.sh`
+      - If this step is unsuccessful, here are potential solutions:
+         - Change permissions further `sudo chmod 755 RemotePiReset/Systemctl/RemotePiReset.sh`
+         - Change permissions for the directory as well `sudo chmod 755 RemotePiReset`
+  - Enable the service 
+  
+      `sudo systemctl daemon-reload`
+   
+      `sudo systemctl enable RemotePiReset.service`
+      
+  - Start the service `sudo systemctl start RemotePiReset.service`
+  
+  - Check the status of the service `sudo systemctl status RemotePiReset.service`
+  
+  - Done! The service should now run on boot. 
+         
+      
 
