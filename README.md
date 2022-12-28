@@ -97,7 +97,7 @@ The principal is the exact same as the D1Mini solution, but the D1Mini is subsit
 
 After installing dependencies: 
 
-Steps:
+### Steps:
 - Create script to run code with command `nano YourFileName.py`
    - Paste code from github file Pi4Method.py into your script
 - Create configuration script to easily modify variables within the code `nano PMConfiguration.py`
