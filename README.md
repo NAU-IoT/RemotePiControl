@@ -129,10 +129,8 @@ After installing dependencies:
          - Change permissions further `sudo chmod 755 RemotePiReset/Systemctl/RemotePiReset.sh`
          - Change permissions for the directory as well `sudo chmod 755 RemotePiReset`
   - Enable the service 
-  
-      `sudo systemctl daemon-reload`
-   
-      `sudo systemctl enable RemotePiReset.service`
+      - `sudo systemctl daemon-reload`
+      - `sudo systemctl enable RemotePiReset.service`
       
   - Start the service `sudo systemctl start RemotePiReset.service`
   
