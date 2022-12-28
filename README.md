@@ -101,12 +101,12 @@ After installing dependencies:
 - Create script to run code with command `git clone https://github.com/NAU-IoT/RemotePiReset.git`
 - Change into RemotePiReset directory `cd RemotePiReset`
 - Change PRPConfiguration.py variable names and paths according to your implementation `nano RPRConfiguration.py`
-- Verify that permissions are set so that the script is executable by typing `chmod +x SCRIPTNAME.py` in the command line
+- Verify that permissions are set so that the script is executable by typing `chmod +x RemotePiReset.py` in the command line
 - To use TLS set, uncomment lines 53-56 and change 1883 to 8883 on line 59
 - IF USING TLS SET: ensure keyfile has the correct permissions for the user to run the script without error
    - If getting error "Error: Problem setting TLS options: File not found." use command `sudo chmod 640 YourKeyFile.key` (sets permissions so that the user and group are able to read the keyfile)    
-- Type `./{YourFileName}.py` into the command line to execute the script
-   - Can also use `python3 YourFileName.py`
+- Type `./RemotePiReset.py` into the command line to execute the script
+   - Can also use `python3 RemotePiReset.py`
 - Publish reset command to topic from client using command:
    
    WITHOUT TLS: `mosquitto_pub -p 1883 -t YOUR_TOPIC -h YOUR_BROKER_IP -m "reset"`
