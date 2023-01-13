@@ -98,7 +98,7 @@ The principal is the exact same as the D1Mini solution, but the D1Mini is subsit
 After installing dependencies: 
 
 ### Steps:
-- Create script to run code with command `git clone https://github.com/NAU-IoT/RemotePiReset.git`
+- Clone this repo to get necessary files `git clone https://github.com/NAU-IoT/RemotePiReset.git`
 - Change into RemotePiReset directory `cd RemotePiReset`
 - Change PRPConfiguration.py variable names and paths according to your implementation `nano RPRConfiguration.py`
 - Verify that permissions are set so that the script is executable by typing `chmod +x RemotePiReset.py` in the command line
