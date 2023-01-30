@@ -6,6 +6,10 @@ This solution can also be done using a D1MiniPro or RaspberryPi, which are both 
 
 ## D1MiniPro Solution
 
+### Note:
+
+   D1MiniPro Solution can only reset. Code is not up to date for stop, start, or status, and will not be developed further. 
+
 ### Components:
 
 **D1MINI PRO**
@@ -27,6 +31,10 @@ Steps:
 - Wire D1Mini to other components
 - Publish reset command to topic from broker
 - Done!
+    
+    
+    
+    
     
     
 ## RaspberryPI Solution
