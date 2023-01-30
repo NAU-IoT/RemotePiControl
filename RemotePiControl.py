@@ -13,7 +13,7 @@ import RPCConfiguration as config
 logging.basicConfig(level=logging.DEBUG)
 
 #import variables from config file
-ResetPin = config.resetpin #establishes reset pin
+SignalPin = config.signalpin #establishes pin that sends reset/stop/start signal
 Topic = config.topic	#establishes topic
 SystemUnderTest = config.client	#establishes system under test
 Broker = config.broker #establishes broker
@@ -23,7 +23,7 @@ Keyfile = config.keyfile
 Timezone = config.timezone
 
 h = lgpio.gpiochip_open(0)	#enable gpio
-lgpio.gpio_claim_output(h, ResetPin) #set reset pin as output
+lgpio.gpio_claim_output(h, SignalPin) #set reset pin as output
 
 #create client instance
 client = mqtt.Client()
@@ -51,11 +51,11 @@ def on_message(client, userdata, msg):
         tsString = str(ts)
         string0 = "\nReset executed at: {}\n".format(tsString) #formats string with timestamp
         logging.debug(string0) #print time stamp when reset occurs
-        lgpio.gpio_write(h, ResetPin, 1) #set reset pin high
+        lgpio.gpio_write(h, SignalPin, 1) #set signal pin high
         string1 = "{} is being reset".format(SystemUnderTest) #formats string with hostname
         logging.debug(string1) #prints string 1 with hostname
         time.sleep(5) #wait 5 seconds
-        lgpio.gpio_write(h, ResetPin, 0) #set reset pin low
+        lgpio.gpio_write(h, SignalPin, 0) #set reset pin low
         string2 = "{} has been reset".format(SystemUnderTest) #formats string with hostname
         logging.debug(string2)
         logging.debug("Please wait while the reset is confirmed...")
@@ -78,7 +78,7 @@ def on_message(client, userdata, msg):
         tsString = str(ts)
         string0 = "\nStop executed at: {}\n".format(tsString) #formats string with timestamp
         logging.debug(string0) #print time stamp when reset occurs
-        lgpio.gpio_write(h, ResetPin, 1) #set reset pin high
+        lgpio.gpio_write(h, SignalPin, 1) #set reset pin high
         string1 = "{} has been stopped".format(SystemUnderTest) #formats string with hostname
         logging.debug(string1) #prints string 1 with hostname
         logging.debug("Verifying stop was executed...")
@@ -101,7 +101,7 @@ def on_message(client, userdata, msg):
         tsString = str(ts)
         string0 = "\nStart executed at: {}\n".format(tsString) #formats string with timestamp
         logging.debug(string0) #print time stamp when reset occurs
-        lgpio.gpio_write(h, ResetPin, 0) #set reset pin low
+        lgpio.gpio_write(h, SignalPin, 0) #set reset pin low
         string1 = "{} has been started".format(SystemUnderTest) #formats string with hostname
         logging.debug(string1) #prints string 1 with hostname
         logging.debug("Verifying start was executed...")
