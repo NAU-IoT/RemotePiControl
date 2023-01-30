@@ -7,7 +7,7 @@ from pythonping import ping
 from datetime import datetime
 import pytz
 import time
-import RPRConfiguration as config
+import RPCConfiguration as config
 
 #enable logging
 logging.basicConfig(level=logging.DEBUG)
