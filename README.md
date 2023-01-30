@@ -116,7 +116,7 @@ After installing dependencies:
 - Change into RemotePiControl directory `cd RemotePiControl`
 - Change RPCConfiguration.py variable names and paths according to your implementation `nano RPCConfiguration.py`
 - Verify that permissions are set so that the script is executable by typing `chmod +x RemotePiControl.py` in the command line
-- To use TLS set, uncomment lines 127-130 and change 1883 to 8883 on line 133
+- To use TLS set, uncomment lines 128-130 and change 1883 to 8883 on line 133
 - IF USING TLS SET: ensure keyfile has the correct permissions for the user to run the script without error
    - If getting error "Error: Problem setting TLS options: File not found." use command `sudo chmod 640 YourKeyFile.key` (sets permissions so that the user and group are able to read the keyfile)    
 - Type `./RemotePiControl.py` into the command line to execute the script
