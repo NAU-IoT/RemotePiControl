@@ -23,7 +23,7 @@ Keyfile = config.keyfile
 Timezone = config.timezone
 
 h = lgpio.gpiochip_open(0)	#enable gpio
-lgpio.gpio_claim_output(h, SignalPin) #set reset pin as output
+lgpio.gpio_claim_output(h, SignalPin) #set signal pin as output
 
 #create client instance
 client = mqtt.Client()
@@ -31,7 +31,6 @@ client = mqtt.Client()
 def on_connect(client, userdata, flags, rc):
     print(f"Connected with result code {rc}")
     # subscribe, which need to put into on_connect
-    # if reconnect after losing the connection with the broker, it will continu>
     client.subscribe(Topic)
 
 #define the publish function
@@ -55,7 +54,7 @@ def on_message(client, userdata, msg):
         string1 = "{} is being reset".format(SystemUnderTest) #formats string with hostname
         logging.debug(string1) #prints string 1 with hostname
         time.sleep(5) #wait 5 seconds
-        lgpio.gpio_write(h, SignalPin, 0) #set reset pin low
+        lgpio.gpio_write(h, SignalPin, 0) #set signal pin low
         string2 = "{} has been reset".format(SystemUnderTest) #formats string with hostname
         logging.debug(string2)
         logging.debug("Please wait while the reset is confirmed...")
@@ -77,8 +76,8 @@ def on_message(client, userdata, msg):
         ts = datetime.now(pytz.timezone(Timezone))
         tsString = str(ts)
         string0 = "\nStop executed at: {}\n".format(tsString) #formats string with timestamp
-        logging.debug(string0) #print time stamp when reset occurs
-        lgpio.gpio_write(h, SignalPin, 1) #set reset pin high
+        logging.debug(string0) #print time stamp when stop occurs
+        lgpio.gpio_write(h, SignalPin, 1) #set signal pin high
         string1 = "{} has been stopped".format(SystemUnderTest) #formats string with hostname
         logging.debug(string1) #prints string 1 with hostname
         logging.debug("Verifying stop was executed...")
@@ -100,8 +99,8 @@ def on_message(client, userdata, msg):
         ts = datetime.now(pytz.timezone(Timezone))
         tsString = str(ts)
         string0 = "\nStart executed at: {}\n".format(tsString) #formats string with timestamp
-        logging.debug(string0) #print time stamp when reset occurs
-        lgpio.gpio_write(h, SignalPin, 0) #set reset pin low
+        logging.debug(string0) #print time stamp when start occurs
+        lgpio.gpio_write(h, SignalPin, 0) #set signal pin low
         string1 = "{} has been started".format(SystemUnderTest) #formats string with hostname
         logging.debug(string1) #prints string 1 with hostname
         logging.debug("Verifying start was executed...")
@@ -122,7 +121,7 @@ def on_message(client, userdata, msg):
 client.on_connect = on_connect
 client.on_message = on_message
 
-# set the will message, when the Raspberry Pi is powered off, or the network is>
+# set the will message, when the Raspberry Pi is powered off, or the network is interrupted
 client.will_set(Topic, b'{"status": "Off"}')
 
 #establish tls set for secure connection over port 8883
