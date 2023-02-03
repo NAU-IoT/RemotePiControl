@@ -59,7 +59,7 @@ def on_message(client, userdata, msg):
         logging.debug(string2)
         logging.debug("Please wait while the reset is confirmed...")
         try:
-            result = ping(SystemUnderTest, verbose=False, count = 12, interval = 3)
+            result = ping(SystemUnderTest, verbose=False, count = 20, interval = 2)
             # the machine responds the ICMP request
             if result.success():
                  logging.debug("{} ICMP_REPLIED".format(SystemUnderTest))
@@ -82,7 +82,7 @@ def on_message(client, userdata, msg):
         logging.debug(string1) #prints string 1 with hostname
         logging.debug("Verifying stop was executed...")
         try:
-            result = ping(SystemUnderTest, verbose=False, count = 12, interval = 3)
+            result = ping(SystemUnderTest, verbose=False, count = 20, interval = 2)
             # the machine responds the ICMP request
             if result.success():
                  logging.debug("{} ICMP_REPLIED".format(SystemUnderTest))
@@ -105,7 +105,7 @@ def on_message(client, userdata, msg):
         logging.debug(string1) #prints string 1 with hostname
         logging.debug("Verifying start was executed...")
         try:
-            result = ping(SystemUnderTest, verbose=False, count = 12, interval = 3)
+            result = ping(SystemUnderTest, verbose=False, count = 20, interval = 2)
             # the machine responds the ICMP request
             if result.success():
                  logging.debug("{} ICMP_REPLIED".format(SystemUnderTest))
@@ -117,7 +117,31 @@ def on_message(client, userdata, msg):
             #pass
             logging.debug("{} DNS_NO_RESOLUTION".format(SystemUnderTest))
         logging.debug("-"*100)
+        
+    if msg.payload.decode() == "status":
+        ts = datetime.now(pytz.timezone(Timezone))
+        tsString = str(ts)
+        string0 = "\nStatus executed at: {}\n".format(tsString) #formats string with timestamp
+        logging.debug(string0) #print time stamp when reset occurs
+        logging.debug("Checking status...")
+        try:
+            result = ping(SystemUnderTest, verbose=False, count = 5, interval = 2)
+            # the machine responds the ICMP request
+            if result.success():
+                 logging.debug("{} ICMP_REPLIED".format(SystemUnderTest))
+                 logging.debug("STATUS: ON")
+            #the machine does NOT respond the ICMP request
+            else:
+                 logging.debug("{} ICMP_IGNORED".format(SystemUnderTest))
+                 logging.debug("STATUS: OFF")
+        # no DNS resolution for host
+        except socket.error:
+            #pass
+            logging.debug("{} DNS_NO_RESOLUTION".format(SystemUnderTest))
+        logging.debug("-"*100)
 
+        
+        
 client.on_connect = on_connect
 client.on_message = on_message
 
