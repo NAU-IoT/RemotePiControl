@@ -1,5 +1,5 @@
 # RemotePiControl
-This repository contains code to facilitate a remote reset, remote stop, remote start, or status message(in progress) on a RaspberryPi. 
+This repository contains code to facilitate a remote reset, remote stop, remote start, or status message on a RaspberryPi. 
 
 This solution can also be done using a D1MiniPro or RaspberryPi, which are both documented here.
 
