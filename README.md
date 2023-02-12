@@ -151,5 +151,13 @@ After installing dependencies:
   
   - Done! The service should now run on boot. 
          
+    
+  ### Common Errors
+  
+  `socket.gaierror: [Errno -2] Name or service not known`
+  
+   - Most likely an issue with the DNS name or IP address not being recognized
+  
+
       
 
