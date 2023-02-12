@@ -59,6 +59,8 @@ Steps:
       
    - indefinitely allow power(start)
 
+A normal single relay is also fine for use, but the relay hat can be found here: https://www.amazon.com/gp/product/B07CZL2SKN/ref=ppx_yo_dt_b_asin_title_o00_s01?ie=UTF8&psc=1
+
 The principal is the exact same as the D1Mini solution, but the D1Mini is subsituted with the Raspberry Pi 4. If you want to run this solution using python on a Raspberry Pi 4, these are the steps:
 
 ### Dependencies:
@@ -112,6 +114,9 @@ The principal is the exact same as the D1Mini solution, but the D1Mini is subsit
 After installing dependencies: 
 
 ### Steps:
+
+Note: If using Relay Hat rather than standalone relay, use RemotePiControlHat.py instead of RemotePiControl.py
+
 - Clone this repo to get necessary files `git clone https://github.com/NAU-IoT/RemotePiControl.git`
 - Change into RemotePiControl directory `cd RemotePiControl`
 - Change RPCConfiguration.py variable names and paths according to your implementation `nano RPCConfiguration.py`
