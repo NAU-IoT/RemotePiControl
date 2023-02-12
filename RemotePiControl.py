@@ -21,7 +21,7 @@ Certfile = config.certfile
 Keyfile = config.keyfile
 Timezone = config.timezone
 
-Relay1Pin = 26  #initialize Relay1Pin to GPIO 26, which is actually pin 37
+Relay1Pin = 26  #initialize Relay1Pin to GPIO 26, which is actually pin 37, if using standalone relay, hook jumper up to this pin
 h = lgpio.gpiochip_open(0)      #enable gpio
 lgpio.gpio_claim_output(h, Relay1Pin) #set Relay1Pin as output
 
