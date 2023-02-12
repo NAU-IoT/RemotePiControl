@@ -13,7 +13,6 @@ import RPCConfiguration as config
 logging.basicConfig(level=logging.DEBUG)
 
 #import variables from config file
-SignalPin = config.signalpin #establishes pin that sends reset/stop/start signal
 Topic = config.topic	#establishes topic
 SystemUnderTest = config.client	#establishes system under test
 Broker = config.broker #establishes broker
@@ -22,8 +21,9 @@ Certfile = config.certfile
 Keyfile = config.keyfile
 Timezone = config.timezone
 
-h = lgpio.gpiochip_open(0)	#enable gpio
-lgpio.gpio_claim_output(h, SignalPin) #set signal pin as output
+Relay1Pin = 26  #initialize Relay1Pin to GPIO 26, which is actually pin 37
+h = lgpio.gpiochip_open(0)      #enable gpio
+lgpio.gpio_claim_output(h, Relay1Pin) #set Relay1Pin as output
 
 #create client instance
 client = mqtt.Client()
@@ -50,11 +50,11 @@ def on_message(client, userdata, msg):
         tsString = str(ts)
         string0 = "\nReset executed at: {}\n".format(tsString) #formats string with timestamp
         logging.debug(string0) #print time stamp when reset occurs
-        lgpio.gpio_write(h, SignalPin, 1) #set signal pin high
+        lgpio.gpio_write(h, Relay1Pin, 1) #set Relay1Pin high
         string1 = "{} is being reset".format(SystemUnderTest) #formats string with hostname
         logging.debug(string1) #prints string 1 with hostname
         time.sleep(5) #wait 5 seconds
-        lgpio.gpio_write(h, SignalPin, 0) #set signal pin low
+        lgpio.gpio_write(h, Relay1Pin, 0) #set Relay1Pin low
         string2 = "{} has been reset".format(SystemUnderTest) #formats string with hostname
         logging.debug(string2)
         logging.debug("Please wait while the reset is confirmed...")
@@ -77,7 +77,7 @@ def on_message(client, userdata, msg):
         tsString = str(ts)
         string0 = "\nStop executed at: {}\n".format(tsString) #formats string with timestamp
         logging.debug(string0) #print time stamp when stop occurs
-        lgpio.gpio_write(h, SignalPin, 1) #set signal pin high
+        lgpio.gpio_write(h, Relay1Pin, 1) #set Relay1Pin pin high
         string1 = "{} has been stopped".format(SystemUnderTest) #formats string with hostname
         logging.debug(string1) #prints string 1 with hostname
         logging.debug("Verifying stop was executed...")
@@ -101,7 +101,7 @@ def on_message(client, userdata, msg):
         tsString = str(ts)
         string0 = "\nStart executed at: {}\n".format(tsString) #formats string with timestamp
         logging.debug(string0) #print time stamp when start occurs
-        lgpio.gpio_write(h, SignalPin, 0) #set signal pin low
+        lgpio.gpio_write(h, Relay1Pin, 0) #set Relay1Pin low
         string1 = "{} has been started".format(SystemUnderTest) #formats string with hostname
         logging.debug(string1) #prints string 1 with hostname
         logging.debug("Verifying start was executed...")
