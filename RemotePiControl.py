@@ -81,7 +81,7 @@ def on_message(client, userdata, msg):
         string1 = "{} has been stopped".format(SystemUnderTest) #formats string with hostname
         logging.debug(string1) #prints string 1 with hostname
         logging.debug("Verifying stop was executed...")
-        sleep(3) #wait 3 seconds before pinging to make sure load is completely off
+        time.sleep(3) #wait 3 seconds before pinging to make sure load is completely off
         try:
             result = ping(SystemUnderTest, verbose=False, count = 5, interval = 2)
             # the machine responds the ICMP request
