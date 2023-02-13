@@ -115,8 +115,6 @@ After installing dependencies:
 
 ### Steps:
 
-Note: If using Relay Hat rather than standalone relay, use RemotePiControlHat.py instead of RemotePiControl.py
-
 - Clone this repo to get necessary files `git clone https://github.com/NAU-IoT/RemotePiControl.git`
 - Change into RemotePiControl directory `cd RemotePiControl`
 - Change RPCConfiguration.py variable names and paths according to your implementation `nano RPCConfiguration.py`
