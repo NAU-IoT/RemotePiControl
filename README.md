@@ -104,7 +104,7 @@ The principal is the exact same as the D1Mini solution, but the D1Mini is subsit
    - `sudo python3 setup.py install`
 
 - Install the GPIO package:
-   - On Raspbian: `apt-get install rpi.gpio`
+   - On Raspbian: `sudo apt-get install rpi.gpio`
    - On Ubuntu: `sudo apt install python3-lgpio`
    
 - Install the pytz timezone library: `pip install pytz`
