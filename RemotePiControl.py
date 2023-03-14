@@ -14,6 +14,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 #import variables from config file
 Topic = config.topic	#establishes topic
+Port = config.port
 SystemUnderTest = config.client	#establishes system under test
 Broker = config.broker #establishes broker
 CA_Certs = config.cacert
@@ -155,7 +156,7 @@ client.will_set(Topic, b'{"status": "Off"}')
 #               keyfile=Keyfile)
 
 # create connection, the three parameters are broker address, broker port numbe>
-client.connect(Broker, 1883, 60) #IP is the common name on the server cert
+client.connect(Broker, Port, 60) #IP is the common name on the server cert
 
 # set the network loop blocking, it will not actively end the program before ca>
 client.loop_forever()
