@@ -4,6 +4,26 @@ This repository contains code to facilitate a remote reset, remote stop, remote 
 This solution can also be done using a D1MiniPro or RaspberryPi, which are both documented here.
 
 
+# Running with Docker
+
+- Install docker:
+    - `sudo apt install docker.io`
+    - `sudo snap install docker`
+    - Check if docker is functioning `sudo docker run hello-world`
+  - Clone repository to get Dockerfile and configuration files `git clone https://github.com/NAU-IoT/RemotePiControl.git`
+  - Change into docker directory `cd RemotePiControl/rpc-docker`
+  - Modify RPCConfiguration.py to match your current implementation `nano RPCConfiguration.py`
+  - Build docker image in current directory `docker build -t remotepicontrol .` this will take a while
+  - Execute docker container `docker run --privileged -v YOUR_VOLUME_NAME:/Data -p YOUR_PORT_NUMBER:CONTAINER_PORT_NUMBER -t -i -d --restart unless-stopped remotepicontrol`
+  - Verify container is running `docker ps`
+  - Done!
+  - To enter the container `docker exec -it CONTAINER_ID /bin/bash`
+    - This can be done to check log files or modify the container without rebuilding/restarting
+
+
+# Running with Python and Systemctl
+
+
 ## D1MiniPro Solution
 
 ### Note:
@@ -33,11 +53,8 @@ Steps:
 - Done!
     
     
-    
-    
-    
-    
-## RaspberryPI Solution
+
+## RaspberryPi Solution
 
 ### Components:
 
