@@ -43,5 +43,5 @@ RUN chmod +x /RemotePiControl.py
 RUN chmod +x /RemotePiControl.sh
 
 CMD service mosquitto start \
-    && python3 RemotePiControl.sh \
+    && ./RemotePiControl.sh \
     && bash
