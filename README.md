@@ -20,6 +20,11 @@ This solution can also be done using a D1MiniPro or RaspberryPi, which are both 
   - To enter the container `docker exec -it CONTAINER_ID /bin/bash`
     - This can be done to check log files or modify the container without rebuilding/restarting
 
+### Common Errors
+ 
+  - If error: `Got permission denied while trying to connect to the Docker daemon socket at unix ... connect: permission denied`
+    - Use `sudo usermod -aG docker $USER` , log out and ssh back into system
+
 
 # Running with Python and Systemctl
 
