@@ -8,7 +8,6 @@ This solution can also be done using a D1MiniPro or RaspberryPi, which are both 
 
 - Install docker:
     - `sudo apt install docker.io`
-    - `sudo snap install docker`
     - Check if docker is functioning `sudo docker run hello-world`
  - Clone repository to get Dockerfile and configuration files `git clone https://github.com/NAU-IoT/RemotePiControl.git`
  - Change into docker directory `cd RemotePiControl/rpc-docker`
