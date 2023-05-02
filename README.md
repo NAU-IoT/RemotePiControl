@@ -12,6 +12,7 @@ This solution can also be done using a D1MiniPro or RaspberryPi, which are both 
  - Clone repository to get Dockerfile and configuration files `git clone https://github.com/NAU-IoT/RemotePiControl.git`
  - Change into docker directory `cd RemotePiControl/rpc-docker`
  - Modify RPCConfiguration.py to match your current implementation `nano RPCConfiguration.py`
+    - Refer to comments for necessary changes
  - Build docker image in current directory `docker build -t remotepicontrol .` this will take a while
  - Create a directory in a convenient location to store the docker volume
  - Create a volume to store data inside the directory created in the previous step `docker volume create --driver local 
