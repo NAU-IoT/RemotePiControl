@@ -14,7 +14,7 @@ This solution can also be done using a D1MiniPro or RaspberryPi, which are both 
  - Change into docker directory `cd RemotePiControl/rpc-docker`
  - Modify RPCConfiguration.py to match your current implementation `nano RPCConfiguration.py`
  - Build docker image in current directory `docker build -t remotepicontrol .` this will take a while
- - Create a volume to store data in a convenient location `sudo docker volume create --driver local 
+ - Create a volume to store data in a convenient location `docker volume create --driver local 
     --opt type=none 
     --opt device=/some/local/directory 
     --opt o=bind 
