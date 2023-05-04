@@ -8,7 +8,7 @@ RUN apt-get install -y python3 python3-pip
 
 RUN apt-get install -y python3-smbus python3-dev i2c-tools
 
-RUN apt install -y software-properties-common
+RUN apt-get install -y software-properties-common
 
 RUN apt-add-repository ppa:mosquitto-dev/mosquitto-ppa
 
