@@ -13,6 +13,7 @@ This solution can also be done using a D1MiniPro or RaspberryPi, which are both 
  - Change into docker directory `cd RemotePiControl/rpc-docker`
  - Modify RPCConfiguration.py to match your current implementation `nano RPCConfiguration.py`
     - Refer to comments for necessary changes
+ - OPTIONAL: To change the docker containers time zone, edit line 33 in the Dockerfile. A list of acceptable time zones can be found at https://en.wikipedia.org/wiki/List_of_tz_database_time_zones 
  - Build docker image in current directory `docker build -t remotepicontrol .` this will take a while
  - Create a directory in a convenient location to store the docker volume. For example: `mkdir -p Data/RPCData`
  - Create a volume to store data inside the directory created in the previous step `docker volume create --driver local 
