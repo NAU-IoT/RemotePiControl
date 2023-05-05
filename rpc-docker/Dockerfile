@@ -28,6 +28,12 @@ RUN pip install pytz
 
 RUN pip install pythonping
 
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y install tzdata
+
+ENV TZ=America/Phoenix
+
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 RUN mkdir -p /Data
 
 RUN mkdir -p /Data/logs
