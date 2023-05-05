@@ -25,6 +25,15 @@ This solution can also be done using a D1MiniPro or RaspberryPi, which are both 
     - Note for IoT Team: Your_port_number could be 11883, container_port_number should be 31883
  - Verify container is running `docker ps`
  - Done!
+ 
+ ### Notes
+ - To publish commands to topic from client, use command:
+   
+   WITHOUT TLS: `mosquitto_pub -p PORT_NUMBER -t YOUR_TOPIC -h YOUR_BROKER_IP -m "reset/start/stop/status"` IoT Team: PORT_NUMBER should be 31883 (number in PMConfiguration.py)
+   
+   WITH TLS: `mosquitto_pub --cafile YOUR_CAFILE.crt --cert YOUR_CERTFILE.crt --key YOUR_KEYFILE.key -p 8883 -d -h YOUR_BROKER_IP -t YOUR_TOPIC -m "reset/start/stop/status"`
+   
+  
  - To enter the container `docker exec -it CONTAINER_ID /bin/bash`
     - This can be done to check log files or modify the container without rebuilding/restarting
 
