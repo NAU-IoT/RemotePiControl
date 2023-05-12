@@ -48,6 +48,8 @@ RUN chmod +x /RemotePiControl.py
 
 RUN chmod +x /RemotePiControl.sh
 
+# sleep command to give mosquitto time to start before using.
 CMD service mosquitto start \
+    && sleep 5 \
     && ./RemotePiControl.sh \
     && bash
