@@ -12,7 +12,7 @@ RUN apt-get install -y software-properties-common
 
 RUN apt-add-repository ppa:mosquitto-dev/mosquitto-ppa
 
-RUN apt-get update
+RUN apt-get -y install cron
 
 RUN apt-get install -y mosquitto mosquitto-clients
 
@@ -43,7 +43,13 @@ ADD RPCConfiguration.py /RPCConfiguration.py
 ADD RemotePiControl.py /RemotePiControl.py
 
 ADD RemotePiControl.sh /RemotePiControl.sh
- 
+
+ADD crontab /etc/cron.d/simple-cron
+
+RUN touch /var/log/cron.log
+
+RUN chmod 0644 /etc/cron.d/simple-cron
+
 RUN chmod +x /RemotePiControl.py
 
 RUN chmod +x /RemotePiControl.sh
@@ -51,5 +57,7 @@ RUN chmod +x /RemotePiControl.sh
 # sleep command to give mosquitto time to start before using.
 CMD service mosquitto start \
     && sleep 5 \
-    && ./RemotePiControl.sh \
+    && cron \
+#Uncomment the line below and comment out the above line for debugging, otherwise script will not execute until midnight
+#    && ./RemotePiControl.sh \ 
     && bash
