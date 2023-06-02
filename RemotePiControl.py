@@ -26,9 +26,6 @@ Relay1Pin = 26  #initialize Relay1Pin to GPIO 26, which is actually pin 37, if u
 h = lgpio.gpiochip_open(0)      #enable gpio
 lgpio.gpio_claim_output(h, Relay1Pin) #set Relay1Pin as output
 
-#create client instance
-client = mqtt.Client()
-
 def on_connect(client, userdata, flags, rc):
     print(f"Connected with result code {rc}")
     # subscribe, which need to put into on_connect
@@ -133,7 +130,8 @@ def on_message(client, userdata, msg):
             logging.debug("{} DNS_NO_RESOLUTION".format(SystemUnderTest))
         logging.debug("-"*100)
 
-        
+#create client instance
+client = mqtt.Client()        
         
 client.on_connect = on_connect
 client.on_message = on_message
