@@ -34,15 +34,6 @@ def on_connect(client, userdata, flags, rc):
     # subscribe, which need to put into on_connect
     client.subscribe(Topic)
 
-#define the publish function
-def publish(self, topic, data, qos=1, retain=False):
-    """
-      Publish to a topic.
-    """
-    logging.info("Publishing to topic %s" % topic)
-    self.client.publish(topic, data, qos=qos, retain=retain)
-
-
 # the callback function, it will be triggered when receiving messages
 def on_message(client, userdata, msg):
 #    print(f"{msg.topic} {msg.payload}")
