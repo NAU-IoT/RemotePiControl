@@ -1,7 +1,7 @@
 # RemotePiControl
 This repository contains code to facilitate a remote reset, remote stop, remote start, or status message on a RaspberryPi. 
 
-This solution can also be done using a D1MiniPro or RaspberryPi, which are both documented here.
+This solution can also be done using a D1MiniPro, which is documented here: https://github.com/NAU-IoT/D1Mini-RemotePiReset 
 
 
 # Running with Docker
