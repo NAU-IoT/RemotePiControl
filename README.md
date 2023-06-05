@@ -106,11 +106,11 @@ docker ps
     
 **RASPBERRY PI IO Board**
 
-   Wired through the relay, this is what is being reset
+   Wired through the relay, this is what is being controlled
     
 **RELAY**
 
-   Wired so that when the Pi 4 sends the reset signal, the relay cuts or allows power to the IO Board:
+   Wired so that when the Pi 4 sends a signal, the relay cuts or allows power to the IO Board:
    
    - for 5 seconds(restart)
       
@@ -118,15 +118,20 @@ docker ps
       
    - indefinitely allow power(start)
 
-A normal single relay is also fine for use, but the relay hat can be found here: https://www.amazon.com/gp/product/B07CZL2SKN/ref=ppx_yo_dt_b_asin_title_o00_s01?ie=UTF8&psc=1
-
-The principal is the exact same as the D1Mini solution, but the D1Mini is subsituted with the Raspberry Pi 4. If you want to run this solution using python on a Raspberry Pi 4, these are the steps:
+A normal standalone relay is fine for use, but the relay hat can be found here: https://www.amazon.com/gp/product/B07CZL2SKN/ref=ppx_yo_dt_b_asin_title_o00_s01?ie=UTF8&psc=1
 
 ## Dependencies:
  - Install mosquitto service:
-    - `sudo apt-get install mosquitto mosquitto-clients`
-    - `sudo systemctl enable mosquitto`
-    - check if mosquitto is running `sudo systemctl status mosquitto`
+    ```
+    sudo apt-get install mosquitto mosquitto-clients
+    ```
+    ```
+    sudo systemctl enable mosquitto
+    ````
+ - Check if mosquitto is running:
+    ```
+    sudo systemctl status mosquitto
+    ```
 
 - Create your own mosquitto configuration file:
    - `cd /etc/mosquitto/conf.d`
