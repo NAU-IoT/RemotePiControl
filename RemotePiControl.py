@@ -30,18 +30,126 @@ Load3 = config.load3
 Relay1Pin = 26  #initialize Relay1Pin to GPIO 26, which is actually pin 37, if using standalone relay, hook jumper up to this pin
 Relay2Pin = 20  #initialize Relay2Pin to GPIO 20, which is actually pin 38, if using standalone relay, hook jumper up to this pin
 Relay3Pin = 21  #initialize Relay3Pin to GPIO 21, which is actually pin 40, if using standalone relay, hook jumper up to this pin
-h = lgpio.gpiochip_open(0)      #enable gpio
-lgpio.gpio_claim_output(h, Relay1Pin) #set Relay1Pin as output
 
-#create client instance
-client = mqtt.Client()
+X = lgpio.gpiochip_open(0)      #enable gpio
+lgpio.gpio_claim_output(X, Relay1Pin) #set Relay1Pin as output
+Y = lgpio.gpiochip_open(0)      #enable gpio
+lgpio.gpio_claim_output(Y, Relay2Pin) #set Relay2Pin as output
+Z = lgpio.gpiochip_open(0)      #enable gpio
+lgpio.gpio_claim_output(Z, Relay3Pin) #set Relay3Pin as output
 
+
+# Function to reset the System Under Test    
+def execute_reset(SystemUnderTest, Timezone, RelayPin, Count):
+    ts = datetime.now(pytz.timezone(Timezone))
+    tsString = str(ts)
+    string0 = "\nReset executed at: {}\n".format(tsString) #formats string with timestamp
+    logging.debug(string0) #print time stamp when reset occurs
+    lgpio.gpio_write(h, RelayPin, 1) #set Relay1Pin high
+    string1 = "{} is being reset".format(SystemUnderTest) #formats string with hostname
+    logging.debug(string1) #prints string 1 with hostname
+    time.sleep(5) #wait 5 seconds
+    lgpio.gpio_write(h, RelayPin, 0) #set Relay1Pin low
+    string2 = "{} has been reset".format(SystemUnderTest) #formats string with hostname
+    logging.debug(string2)
+    logging.debug("Please wait while the reset is confirmed...")
+    try:
+      result = ping(SystemUnderTest, verbose=False, count = Count, interval = 2)
+      # the machine responds the ICMP request
+      if result.success():
+         logging.debug("{} ICMP_REPLIED".format(SystemUnderTest))
+         #the machine does NOT respond the ICMP request
+      else:
+         logging.debug("{} ICMP_IGNORED".format(SystemUnderTest))
+         # no DNS resolution for host
+    except socket.error:
+      #pass
+      logging.debug("{} DNS_NO_RESOLUTION".format(SystemUnderTest))
+    logging.debug("-"*100)
+  
+
+# Function to stop the System Under Test       
+def execute_stop(SystemUnderTest, Timezone, RelayPin, Count):
+    ts = datetime.now(pytz.timezone(Timezone))
+    tsString = str(ts)
+    string0 = "\nStop executed at: {}\n".format(tsString) #formats string with timestamp
+    logging.debug(string0) #print time stamp when stop occurs
+    lgpio.gpio_write(h, RelayPin, 1) #set Relay1Pin pin high
+    string1 = "{} has been stopped".format(SystemUnderTest) #formats string with hostname
+    logging.debug(string1) #prints string 1 with hostname
+    logging.debug("Verifying stop was executed...")
+    time.sleep(3) #wait 3 seconds before pinging to make sure load is completely off
+    try:
+      result = ping(SystemUnderTest, verbose=False, count = Count, interval = 2) 
+      # the machine responds the ICMP request
+      if result.success():
+         logging.debug("{} ICMP_REPLIED".format(SystemUnderTest))
+         #the machine does NOT respond the ICMP request
+      else:
+         logging.debug("{} ICMP_IGNORED".format(SystemUnderTest))
+         # no DNS resolution for host
+    except socket.error:
+         #pass
+         logging.debug("{} DNS_NO_RESOLUTION".format(SystemUnderTest)
+    logging.debug("-"*100)
+
+                       
+# Function to start the System Under Test                      
+def execute_start(SystemUnderTest, Timezone, RelayPin, Count):
+    ts = datetime.now(pytz.timezone(Timezone))
+    tsString = str(ts)
+    string0 = "\nStart executed at: {}\n".format(tsString) #formats string with timestamp
+    logging.debug(string0) #print time stamp when start occurs  
+    lgpio.gpio_write(h, RelayPin, 0) #set Relay1Pin low
+    string1 = "{} has been started".format(SystemUnderTest) #formats string with hostname
+    logging.debug(string1) #prints string 1 with hostname
+    logging.debug("Verifying start was executed...")
+    try:
+      result = ping(SystemUnderTest, verbose=False, count = Count, interval = 2)
+      # the machine responds the ICMP request
+      if result.success():
+         logging.debug("{} ICMP_REPLIED".format(SystemUnderTest))
+         #the machine does NOT respond the ICMP request
+      else:
+         logging.debug("{} ICMP_IGNORED".format(SystemUnderTest))
+         # no DNS resolution for host
+    except socket.error:
+      #pass
+      logging.debug("{} DNS_NO_RESOLUTION".format(SystemUnderTest))
+    logging.debug("-"*100)                    
+
+                       
+# Function to get the current status of the System Undert Test
+def execute_status(SystemUnderTest, Timezone, RelayPin, Count):
+    ts = datetime.now(pytz.timezone(Timezone))
+    tsString = str(ts)
+    string0 = "\nStatus executed at: {}\n".format(tsString) #formats string with timestamp
+    logging.debug(string0) #print time stamp when reset occurs
+    logging.debug("Checking status...")
+    try:
+      result = ping(SystemUnderTest, verbose=False, count = Count, interval = 2)
+      # the machine responds the ICMP request
+      if result.success():
+         logging.debug("{} ICMP_REPLIED".format(SystemUnderTest))
+         logging.debug("STATUS: ON")
+         #the machine does NOT respond the ICMP request
+      else:
+         logging.debug("{} ICMP_IGNORED".format(SystemUnderTest))
+         logging.debug("STATUS: OFF")
+         # no DNS resolution for host
+    except socket.error:
+      #pass
+      logging.debug("{} DNS_NO_RESOLUTION".format(SystemUnderTest))
+    logging.debug("-"*100)
+
+                       
 def on_connect(client, userdata, flags, rc):
-    print(f"Connected with result code {rc}")
+    logging.debug(f"Connected with result code {rc}")
     # subscribe, which need to put into on_connect
     client.subscribe(Topic)
 
-#define the publish function
+                       
+# Define the publish function
 def publish(self, topic, data, qos=1, retain=False):
     """
       Publish to a topic.
@@ -49,305 +157,52 @@ def publish(self, topic, data, qos=1, retain=False):
     logging.info("Publishing to topic %s" % topic)
     self.client.publish(topic, data, qos=qos, retain=retain)
 
-
-# the callback function, it will be triggered when receiving messages
+                       
+# The callback function, it will be triggered when receiving messages
 def on_message(client, userdata, msg):
-#    print(f"{msg.topic} {msg.payload}")
   if(Load1):
     if msg.payload.decode() == "reset1":
-        ts = datetime.now(pytz.timezone(Timezone))
-        tsString = str(ts)
-        string0 = "\nReset executed at: {}\n".format(tsString) #formats string with timestamp
-        logging.debug(string0) #print time stamp when reset occurs
-        lgpio.gpio_write(h, Relay1Pin, 1) #set Relay1Pin high
-        string1 = "{} is being reset".format(SystemUnderTest1) #formats string with hostname
-        logging.debug(string1) #prints string 1 with hostname
-        time.sleep(5) #wait 5 seconds
-        lgpio.gpio_write(h, Relay1Pin, 0) #set Relay1Pin low
-        string2 = "{} has been reset".format(SystemUnderTest1) #formats string with hostname
-        logging.debug(string2)
-        logging.debug("Please wait while the reset is confirmed...")
-        try:
-            result = ping(SystemUnderTest1, verbose=False, count = 20, interval = 2)
-            # the machine responds the ICMP request
-            if result.success():
-                 logging.debug("{} ICMP_REPLIED".format(SystemUnderTest1))
-            #the machine does NOT respond the ICMP request
-            else:
-                 logging.debug("{} ICMP_IGNORED".format(SystemUnderTest1))
-        # no DNS resolution for host
-        except socket.error:
-            #pass
-            logging.debug("{} DNS_NO_RESOLUTION".format(SystemUnderTest1))
-        logging.debug("-"*100)
+       execute_reset(SystemUnderTest1, Timezone, Relay1Pin, 20) # Parameters are (SystemUnderTest, Timezone, RelayPin, Count)
 
     if msg.payload.decode() == "stop1":
-        ts = datetime.now(pytz.timezone(Timezone))
-        tsString = str(ts)
-        string0 = "\nStop executed at: {}\n".format(tsString) #formats string with timestamp
-        logging.debug(string0) #print time stamp when stop occurs
-        lgpio.gpio_write(h, Relay1Pin, 1) #set Relay1Pin pin high
-        string1 = "{} has been stopped".format(SystemUnderTest1) #formats string with hostname
-        logging.debug(string1) #prints string 1 with hostname
-        logging.debug("Verifying stop was executed...")
-        time.sleep(3) #wait 3 seconds before pinging to make sure load is completely off
-        try:
-            result = ping(SystemUnderTest1, verbose=False, count = 5, interval = 2)
-            # the machine responds the ICMP request
-            if result.success():
-                 logging.debug("{} ICMP_REPLIED".format(SystemUnderTest1))
-            #the machine does NOT respond the ICMP request
-            else:
-                 logging.debug("{} ICMP_IGNORED".format(SystemUnderTest1))
-        # no DNS resolution for host
-        except socket.error:
-            #pass
-            logging.debug("{} DNS_NO_RESOLUTION".format(SystemUnderTest1))
-        logging.debug("-"*100)
+       execute_stop(SystemUnderTest1, Timezone, Relay1Pin, 5) # Parameters are (SystemUnderTest, Timezone, RelayPin, Count)
 
     if msg.payload.decode() == "start1":
-        ts = datetime.now(pytz.timezone(Timezone))
-        tsString = str(ts)
-        string0 = "\nStart executed at: {}\n".format(tsString) #formats string with timestamp
-        logging.debug(string0) #print time stamp when start occurs
-        lgpio.gpio_write(h, Relay1Pin, 0) #set Relay1Pin low
-        string1 = "{} has been started".format(SystemUnderTest1) #formats string with hostname
-        logging.debug(string1) #prints string 1 with hostname
-        logging.debug("Verifying start was executed...")
-        try:
-            result = ping(SystemUnderTest1, verbose=False, count = 20, interval = 2)
-            # the machine responds the ICMP request
-            if result.success():
-                 logging.debug("{} ICMP_REPLIED".format(SystemUnderTest1))
-            #the machine does NOT respond the ICMP request
-            else:
-                 logging.debug("{} ICMP_IGNORED".format(SystemUnderTest1))
-        # no DNS resolution for host
-        except socket.error:
-            #pass
-            logging.debug("{} DNS_NO_RESOLUTION".format(SystemUnderTest1))
-        logging.debug("-"*100)
+       execute_start(SystemUnderTest1, Timezone, Relay1Pin, 20) # Parameters are (SystemUnderTest, Timezone, RelayPin, Count)
         
     if msg.payload.decode() == "status1":
-        ts = datetime.now(pytz.timezone(Timezone))
-        tsString = str(ts)
-        string0 = "\nStatus executed at: {}\n".format(tsString) #formats string with timestamp
-        logging.debug(string0) #print time stamp when reset occurs
-        logging.debug("Checking status...")
-        try:
-            result = ping(SystemUnderTest1, verbose=False, count = 5, interval = 2)
-            # the machine responds the ICMP request
-            if result.success():
-                 logging.debug("{} ICMP_REPLIED".format(SystemUnderTest1))
-                 logging.debug("STATUS: ON")
-            #the machine does NOT respond the ICMP request
-            else:
-                 logging.debug("{} ICMP_IGNORED".format(SystemUnderTest1))
-                 logging.debug("STATUS: OFF")
-        # no DNS resolution for host
-        except socket.error:
-            #pass
-            logging.debug("{} DNS_NO_RESOLUTION".format(SystemUnderTest1))
-        logging.debug("-"*100)
-        
-        
-    if(Load2):    
-      if msg.payload.decode() == "reset2":
-        ts = datetime.now(pytz.timezone(Timezone))
-        tsString = str(ts)
-        string0 = "\nReset executed at: {}\n".format(tsString) #formats string with timestamp
-        logging.debug(string0) #print time stamp when reset occurs
-        lgpio.gpio_write(h, Relay1Pin, 1) #set Relay1Pin high
-        string1 = "{} is being reset".format(SystemUnderTest2) #formats string with hostname
-        logging.debug(string1) #prints string 1 with hostname
-        time.sleep(5) #wait 5 seconds
-        lgpio.gpio_write(h, Relay1Pin, 0) #set Relay1Pin low
-        string2 = "{} has been reset".format(SystemUnderTest2) #formats string with hostname
-        logging.debug(string2)
-        logging.debug("Please wait while the reset is confirmed...")
-        try:
-            result = ping(SystemUnderTest2, verbose=False, count = 20, interval = 2)
-            # the machine responds the ICMP request
-            if result.success():
-                 logging.debug("{} ICMP_REPLIED".format(SystemUnderTest2))
-            #the machine does NOT respond the ICMP request
-            else:
-                 logging.debug("{} ICMP_IGNORED".format(SystemUnderTest2))
-        # no DNS resolution for host
-        except socket.error:
-            #pass
-            logging.debug("{} DNS_NO_RESOLUTION".format(SystemUnderTest2))
-        logging.debug("-"*100)
+       execute_status(SystemUnderTest1, Timezone, Relay1Pin, 5) # Parameters are (SystemUnderTest, Timezone, RelayPin, Count)
+         
+  if(Load2):    
+    if msg.payload.decode() == "reset1":
+       execute_reset(SystemUnderTest2, Timezone, Relay2Pin, 20) # Parameters are (SystemUnderTest, Timezone, RelayPin, Count)
 
-    if msg.payload.decode() == "stop2":
-        ts = datetime.now(pytz.timezone(Timezone))
-        tsString = str(ts)
-        string0 = "\nStop executed at: {}\n".format(tsString) #formats string with timestamp
-        logging.debug(string0) #print time stamp when stop occurs
-        lgpio.gpio_write(h, Relay1Pin, 1) #set Relay1Pin pin high
-        string1 = "{} has been stopped".format(SystemUnderTest2) #formats string with hostname
-        logging.debug(string1) #prints string 1 with hostname
-        logging.debug("Verifying stop was executed...")
-        time.sleep(3) #wait 3 seconds before pinging to make sure load is completely off
-        try:
-            result = ping(SystemUnderTest2, verbose=False, count = 5, interval = 2)
-            # the machine responds the ICMP request
-            if result.success():
-                 logging.debug("{} ICMP_REPLIED".format(SystemUnderTest2))
-            #the machine does NOT respond the ICMP request
-            else:
-                 logging.debug("{} ICMP_IGNORED".format(SystemUnderTest2))
-        # no DNS resolution for host
-        except socket.error:
-            #pass
-            logging.debug("{} DNS_NO_RESOLUTION".format(SystemUnderTest2))
-        logging.debug("-"*100)
+    if msg.payload.decode() == "stop1":
+       execute_stop(SystemUnderTest2, Timezone, Relay2Pin, 5) # Parameters are (SystemUnderTest, Timezone, RelayPin, Count)
 
-    if msg.payload.decode() == "start2":
-        ts = datetime.now(pytz.timezone(Timezone))
-        tsString = str(ts)
-        string0 = "\nStart executed at: {}\n".format(tsString) #formats string with timestamp
-        logging.debug(string0) #print time stamp when start occurs
-        lgpio.gpio_write(h, Relay1Pin, 0) #set Relay1Pin low
-        string1 = "{} has been started".format(SystemUnderTest2) #formats string with hostname
-        logging.debug(string1) #prints string 1 with hostname
-        logging.debug("Verifying start was executed...")
-        try:
-            result = ping(SystemUnderTest2, verbose=False, count = 20, interval = 2)
-            # the machine responds the ICMP request
-            if result.success():
-                 logging.debug("{} ICMP_REPLIED".format(SystemUnderTest2))
-            #the machine does NOT respond the ICMP request
-            else:
-                 logging.debug("{} ICMP_IGNORED".format(SystemUnderTest2))
-        # no DNS resolution for host
-        except socket.error:
-            #pass
-            logging.debug("{} DNS_NO_RESOLUTION".format(SystemUnderTest2))
-        logging.debug("-"*100)
-       
-    if msg.payload.decode() == "status2":
-        ts = datetime.now(pytz.timezone(Timezone))
-        tsString = str(ts)
-        string0 = "\nStatus executed at: {}\n".format(tsString) #formats string with timestamp
-        logging.debug(string0) #print time stamp when reset occurs
-        logging.debug("Checking status...")
-        try:
-            result = ping(SystemUnderTest2, verbose=False, count = 5, interval = 2)
-            # the machine responds the ICMP request
-            if result.success():
-                 logging.debug("{} ICMP_REPLIED".format(SystemUnderTest2))
-                 logging.debug("STATUS: ON")
-            #the machine does NOT respond the ICMP request
-            else:
-                 logging.debug("{} ICMP_IGNORED".format(SystemUnderTest2))
-                 logging.debug("STATUS: OFF")
-        # no DNS resolution for host
-        except socket.error:
-            #pass
-            logging.debug("{} DNS_NO_RESOLUTION".format(SystemUnderTest2))
-        logging.debug("-"*100)
-
+    if msg.payload.decode() == "start1":
+       execute_start(SystemUnderTest2, Timezone, Relay2Pin, 20) # Parameters are (SystemUnderTest, Timezone, RelayPin, Count)
         
+    if msg.payload.decode() == "status1":
+       execute_status(SystemUnderTest2, Timezone, Relay2Pin, 5) # Parameters are (SystemUnderTest, Timezone, RelayPin, Count)
+  
   if(Load3):      
     if msg.payload.decode() == "reset3":
-        ts = datetime.now(pytz.timezone(Timezone))
-        tsString = str(ts)
-        string0 = "\nReset executed at: {}\n".format(tsString) #formats string with timestamp
-        logging.debug(string0) #print time stamp when reset occurs
-        lgpio.gpio_write(h, Relay1Pin, 1) #set Relay1Pin high
-        string1 = "{} is being reset".format(SystemUnderTest3) #formats string with hostname
-        logging.debug(string1) #prints string 1 with hostname
-        time.sleep(5) #wait 5 seconds
-        lgpio.gpio_write(h, Relay1Pin, 0) #set Relay1Pin low
-        string2 = "{} has been reset".format(SystemUnderTest3) #formats string with hostname
-        logging.debug(string2)
-        logging.debug("Please wait while the reset is confirmed...")
-        try:
-            result = ping(SystemUnderTest3, verbose=False, count = 20, interval = 2)
-            # the machine responds the ICMP request
-            if result.success():
-                 logging.debug("{} ICMP_REPLIED".format(SystemUnderTest3))
-            #the machine does NOT respond the ICMP request
-            else:
-                 logging.debug("{} ICMP_IGNORED".format(SystemUnderTest3))
-        # no DNS resolution for host
-        except socket.error:
-            #pass
-            logging.debug("{} DNS_NO_RESOLUTION".format(SystemUnderTest3))
-        logging.debug("-"*100)
+       execute_reset(SystemUnderTest3, Timezone, Relay3Pin, 20) # Parameters are (SystemUnderTest, Timezone, RelayPin, Count)
 
     if msg.payload.decode() == "stop3":
-        ts = datetime.now(pytz.timezone(Timezone))
-        tsString = str(ts)
-        string0 = "\nStop executed at: {}\n".format(tsString) #formats string with timestamp
-        logging.debug(string0) #print time stamp when stop occurs
-        lgpio.gpio_write(h, Relay1Pin, 1) #set Relay1Pin pin high
-        string1 = "{} has been stopped".format(SystemUnderTest3) #formats string with hostname
-        logging.debug(string1) #prints string 1 with hostname
-        logging.debug("Verifying stop was executed...")
-        time.sleep(3) #wait 3 seconds before pinging to make sure load is completely off
-        try:
-            result = ping(SystemUnderTest3, verbose=False, count = 5, interval = 2)
-            # the machine responds the ICMP request
-            if result.success():
-                 logging.debug("{} ICMP_REPLIED".format(SystemUnderTest3))
-            #the machine does NOT respond the ICMP request
-            else:
-                 logging.debug("{} ICMP_IGNORED".format(SystemUnderTest3))
-        # no DNS resolution for host
-        except socket.error:
-            #pass
-            logging.debug("{} DNS_NO_RESOLUTION".format(SystemUnderTest3))
-        logging.debug("-"*100)
+       execute_stop(SystemUnderTest3, Timezone, Relay3Pin, 5) # Parameters are (SystemUnderTest, Timezone, RelayPin, Count)
 
     if msg.payload.decode() == "start3":
-        ts = datetime.now(pytz.timezone(Timezone))
-        tsString = str(ts)
-        string0 = "\nStart executed at: {}\n".format(tsString) #formats string with timestamp
-        logging.debug(string0) #print time stamp when start occurs
-        lgpio.gpio_write(h, Relay1Pin, 0) #set Relay1Pin low
-        string1 = "{} has been started".format(SystemUnderTest3) #formats string with hostname
-        logging.debug(string1) #prints string 1 with hostname
-        logging.debug("Verifying start was executed...")
-        try:
-            result = ping(SystemUnderTest3, verbose=False, count = 20, interval = 2)
-            # the machine responds the ICMP request
-            if result.success():
-                 logging.debug("{} ICMP_REPLIED".format(SystemUnderTest3))
-            #the machine does NOT respond the ICMP request
-            else:
-                 logging.debug("{} ICMP_IGNORED".format(SystemUnderTest3))
-        # no DNS resolution for host
-        except socket.error:
-            #pass
-            logging.debug("{} DNS_NO_RESOLUTION".format(SystemUnderTest3))
-        logging.debug("-"*100)
+       execute_start(SystemUnderTest3, Timezone, Relay3Pin, 20) # Parameters are (SystemUnderTest, Timezone, RelayPin, Count)
         
     if msg.payload.decode() == "status3":
-        ts = datetime.now(pytz.timezone(Timezone))
-        tsString = str(ts)
-        string0 = "\nStatus executed at: {}\n".format(tsString) #formats string with timestamp
-        logging.debug(string0) #print time stamp when reset occurs
-        logging.debug("Checking status...")
-        try:
-            result = ping(SystemUnderTest3, verbose=False, count = 5, interval = 2)
-            # the machine responds the ICMP request
-            if result.success():
-                 logging.debug("{} ICMP_REPLIED".format(SystemUnderTest3))
-                 logging.debug("STATUS: ON")
-            #the machine does NOT respond the ICMP request
-            else:
-                 logging.debug("{} ICMP_IGNORED".format(SystemUnderTest3))
-                 logging.debug("STATUS: OFF")
-        # no DNS resolution for host
-        except socket.error:
-            #pass
-            logging.debug("{} DNS_NO_RESOLUTION".format(SystemUnderTest3))
-        logging.debug("-"*100)
+       execute_status(SystemUnderTest3, Timezone, Relay3Pin, 5) # Parameters are (SystemUnderTest, Timezone, RelayPin, Count)
 
-        
-        
+#create client instance
+client = mqtt.Client()                       
+
+# Set callback functions for client
 client.on_connect = on_connect
 client.on_message = on_message
 
