@@ -6,25 +6,39 @@ This solution can also be done using a D1MiniPro or RaspberryPi, which are both 
 
 # Running with Docker
 
-- Install docker:
-    - `sudo apt install docker.io`
-    - Check if docker is functioning `sudo docker run hello-world`
- - Clone repository to get Dockerfile and configuration files `git clone https://github.com/NAU-IoT/RemotePiControl.git`
- - Change into docker directory `cd RemotePiControl/rpc-docker`
- - Modify RPCConfiguration.py to match your current implementation `nano RPCConfiguration.py`
-    - Refer to comments for necessary changes
- - OPTIONAL: To change the docker containers time zone, edit line 33 in the Dockerfile. A list of acceptable time zones can be found at https://en.wikipedia.org/wiki/List_of_tz_database_time_zones 
- - Build docker image in current directory `docker build -t remotepicontrol .` this will take a while
- - Create a directory in a convenient location to store the docker volume. For example: `mkdir -p Data/RPCData`
- - Create a volume to store data inside the directory created in the previous step `docker volume create --driver local 
+- Install docker: 
+```
+sudo apt install docker.io 
+```
+
+- Check if docker is functioning 
+```
+sudo docker run hello-world
+```  
+- Clone repository to get Dockerfile and configuration files 
+```
+git clone https://github.com/NAU-IoT/RemotePiControl.git
+```
+- Change into docker directory 
+```
+cd RemotePiControl/rpc-docker
+```
+- Modify RPCConfiguration.py to match your current implementation. Refer to comments for necessary changes
+```
+nano RPCConfiguration.py
+```
+- OPTIONAL: To change the docker containers time zone, edit line 33 in the Dockerfile. A list of acceptable time zones can be found at https://en.wikipedia.org/wiki/List_of_tz_database_time_zones 
+- Build docker image in current directory `docker build -t remotepicontrol .` this will take a while
+- Create a directory in a convenient location to store the docker volume. For example: `mkdir -p Data/RPCData`
+- Create a volume to store data inside the directory created in the previous step `docker volume create --driver local 
     --opt type=none 
     --opt device=/SOME/LOCAL/DIRECTORY 
     --opt o=bind 
     YOUR_VOLUME_NAME`
- - Execute docker container in RemotePiControl/rpc-docker `docker run --privileged -v YOUR_VOLUME_NAME:/Data -p YOUR_PORT_NUMBER:CONTAINER_PORT_NUMBER -t -i -d --restart unless-stopped remotepicontrol`
+- Execute docker container in RemotePiControl/rpc-docker `docker run --privileged -v YOUR_VOLUME_NAME:/Data -p YOUR_PORT_NUMBER:CONTAINER_PORT_NUMBER -t -i -d --restart unless-stopped remotepicontrol`
     - Note for IoT Team: Your_port_number could be 11883, container_port_number should be 31883
- - Verify container is running `docker ps`
- - Done!
+- Verify container is running `docker ps`
+- Done!
  
  ### Notes
  - To publish commands to topic from client, use command:
