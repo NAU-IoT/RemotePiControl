@@ -11,88 +11,94 @@ This solution can also be done using a D1MiniPro or RaspberryPi, which are both 
 sudo apt install docker.io 
 ```
 
-- Check if docker is functioning 
+- Check if docker is functioning: 
 ```
 sudo docker run hello-world
 ```  
-- Clone repository to get Dockerfile and configuration files 
+- Clone repository to get Dockerfile and configuration files: 
 ```
 git clone https://github.com/NAU-IoT/RemotePiControl.git
 ```
-- Change into docker directory 
+- Change into docker directory: 
 ```
 cd RemotePiControl/rpc-docker
 ```
-- Modify RPCConfiguration.py to match your current implementation. Refer to comments for necessary changes
+- Modify RPCConfiguration.py to match your current implementation: 
+   - Refer to comments for necessary changes
 ```
 nano RPCConfiguration.py
 ```
 - OPTIONAL: To change the docker containers time zone, edit line 33 in the Dockerfile. A list of acceptable time zones can be found at https://en.wikipedia.org/wiki/List_of_tz_database_time_zones 
-- Build docker image in current directory `docker build -t remotepicontrol .` this will take a while
-- Create a directory in a convenient location to store the docker volume. For example: `mkdir -p Data/RPCData`
-- Create a volume to store data inside the directory created in the previous step `docker volume create --driver local 
+- Build docker image in current directory:
+   - This will take a while
+```
+docker build -t remotepicontrol .
+```
+- Create a directory in a convenient location to store the docker volume. For example: 
+```
+mkdir -p Data/RPCData
+```
+- Create a volume to store data inside the directory created in the previous step: 
+```docker volume create --driver local 
     --opt type=none 
     --opt device=/SOME/LOCAL/DIRECTORY 
     --opt o=bind 
-    YOUR_VOLUME_NAME`
-- Execute docker container in RemotePiControl/rpc-docker `docker run --privileged -v YOUR_VOLUME_NAME:/Data -p YOUR_PORT_NUMBER:CONTAINER_PORT_NUMBER -t -i -d --restart unless-stopped remotepicontrol`
+    YOUR_VOLUME_NAME
+```
+- Execute docker container: 
     - Note for IoT Team: Your_port_number could be 11883, container_port_number should be 31883
-- Verify container is running `docker ps`
+```
+docker run --privileged -v YOUR_VOLUME_NAME:/Data -p YOUR_PORT_NUMBER:CONTAINER_PORT_NUMBER -t -i -d --restart unless-stopped remotepicontrol
+```
+- Verify container is running: 
+```
+docker ps
+```
 - Done!
  
- ### Notes
+ ## Notes
  - To publish commands to topic from client, use command:
    
-   WITHOUT TLS: `mosquitto_pub -p PORT_NUMBER -t YOUR_TOPIC -h YOUR_BROKER_IP -m "reset/start/stop/status"` IoT Team: PORT_NUMBER should be 11883 (number in RPCConfiguration.py)
+   WITHOUT TLS: 
    
-   WITH TLS: `mosquitto_pub --cafile YOUR_CAFILE.crt --cert YOUR_CERTFILE.crt --key YOUR_KEYFILE.key -p 8883 -d -h YOUR_BROKER_IP -t YOUR_TOPIC -m "reset/start/stop/status"`
+   IoT Team: PORT_NUMBER should be 31883 (number in RPCConfiguration.py)
+   ```
+   mosquitto_pub -p PORT_NUMBER -t YOUR_TOPIC -h YOUR_BROKER_IP -m "reset/start/stop/status"
+   ```
    
+   example command:
+   ```
+   mosquitto_pub -p 1883 -t HomeNetwork -h localhost -m "reset"
+   ```
+   
+   WITH TLS: 
+   ```
+   mosquitto_pub --cafile YOUR_CAFILE.crt --cert YOUR_CERTFILE.crt --key YOUR_KEYFILE.key -p 8883 -d -h YOUR_BROKER_IP -t YOUR_TOPIC -m "reset/start/stop/status"
+   ```
+   example command:
+   ```
+   mosquitto_pub --cafile /home/michael/cafile.crt --cert /home/michael/certfile.crt --key /home/michael/keyfile.key -p 8883 -d -h localhost -t HomeNetwork -m "reset"
+   ```
   
- - To enter the container `docker exec -it CONTAINER_ID /bin/bash`
-    - This can be done to check log files or modify the container without rebuilding/restarting
+ - To enter the container:
+   - This can be done to check log files or modify the container without rebuilding
+ ```
+ docker exec -it CONTAINER_ID /bin/bash
+ ```
 
-### Common Errors
+## Common Errors
  
   - If error: `Got permission denied while trying to connect to the Docker daemon socket at unix ... connect: permission denied`
-    - Use `sudo usermod -aG docker $USER` , log out and ssh back into system
+    - Run command: 
+    ```
+    sudo usermod -aG docker $USER
+    ```
+    - Log out and ssh back into system
 
 
-# Running with Python and Systemctl
+# Running with Python and Systemctl  
 
-
-## D1MiniPro Solution
-
-### Note:
-
-   D1MiniPro Solution can only reset. Code is not up to date for stop, start, or status, and will not be developed further. 
-
-### Components:
-
-**D1MINI PRO**
-
-   Used to interpret reset command over MQTT and send resetting signal to relay
-    
-**RASPBERRY PI**
-
-   Wired through the relay, this is what is being reset
-    
-**5V RELAY**
-
-   Wired so that when the D1Mini sends the reset signal, the relay cuts power to the Rpi for 5 seconds.
-    
-   
-Steps:
-- Copy source code into Arduino IDE (found in D1Code)
-- Upload onto D1MiniPro
-- Wire D1Mini to other components
-- Publish reset command to topic from broker
-- Done!
-    
-    
-
-## RaspberryPi Solution
-
-### Components:
+## Components:
 
 **Raspberry Pi 4**
 
@@ -116,7 +122,7 @@ A normal single relay is also fine for use, but the relay hat can be found here:
 
 The principal is the exact same as the D1Mini solution, but the D1Mini is subsituted with the Raspberry Pi 4. If you want to run this solution using python on a Raspberry Pi 4, these are the steps:
 
-### Dependencies:
+## Dependencies:
  - Install mosquitto service:
     - `sudo apt-get install mosquitto mosquitto-clients`
     - `sudo systemctl enable mosquitto`
@@ -166,7 +172,7 @@ The principal is the exact same as the D1Mini solution, but the D1Mini is subsit
 
 After installing dependencies: 
 
-### Steps:
+## Steps:
 
 - Clone this repo to get necessary files `git clone https://github.com/NAU-IoT/RemotePiControl.git`
 - Change into RemotePiControl directory `cd RemotePiControl`
@@ -186,7 +192,7 @@ After installing dependencies:
 - Done!
 
 
-### Implementing the script as a service
+## Implementing the script as a service
 
 Note: If using standalone relay rather than relay hat, change "26" to "4" on line 30 of RemotePiControl.py and hook your signal jumper up to pin 7 of the pi4.
 
@@ -211,7 +217,7 @@ Note: If using standalone relay rather than relay hat, change "26" to "4" on lin
   - Done! The service should now run on boot. 
          
     
-  ### Common Errors
+  ## Common Errors
   
   `socket.gaierror: [Errno -2] Name or service not known`
   
