@@ -29,7 +29,7 @@ This solution can also be done using a D1MiniPro or RaspberryPi, which are both 
  ### Notes
  - To publish commands to topic from client, use command:
    
-   WITHOUT TLS: `mosquitto_pub -p PORT_NUMBER -t YOUR_TOPIC -h YOUR_BROKER_IP -m "reset/start/stop/status"` IoT Team: PORT_NUMBER should be 31883 (number in PMConfiguration.py)
+   WITHOUT TLS: `mosquitto_pub -p PORT_NUMBER -t YOUR_TOPIC -h YOUR_BROKER_IP -m "reset/start/stop/status"` IoT Team: PORT_NUMBER should be 11883 (number in RPCConfiguration.py)
    
    WITH TLS: `mosquitto_pub --cafile YOUR_CAFILE.crt --cert YOUR_CERTFILE.crt --key YOUR_KEYFILE.key -p 8883 -d -h YOUR_BROKER_IP -t YOUR_TOPIC -m "reset/start/stop/status"`
    
