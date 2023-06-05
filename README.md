@@ -174,7 +174,7 @@ After installing dependencies:
 
 ### Implementing the script as a service
 
-Note: If using standalone relay rather than relay hat, change "26" to "4" on line 24 of RemotePiControl.py and hook your signal jumper up to pin 7 of the pi4.
+Note: If using standalone relay rather than relay hat, change "26" to "4" on line 30 of RemotePiControl.py and hook your signal jumper up to pin 7 of the pi4.
 
   - Create logs directory inside of the RemotePiControl directory `mkdir logs`
   - Create a systemd entry 
