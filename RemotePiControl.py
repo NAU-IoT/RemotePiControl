@@ -39,8 +39,21 @@ Z = lgpio.gpiochip_open(0)      #enable gpio
 lgpio.gpio_claim_output(Z, Relay3Pin) #set Relay3Pin as output
 
 
+# Function to ping System Under Test to see if it is responding
+def verify_ping(SystemUnderTest, Count)
+    result = ping(SystemUnderTest, verbose=False, count = Count, interval = 2)
+    if result.success():
+       # The machine responds the ICMP request
+       logging.debug("{} ICMP_REPLIED".format(SystemUnderTest))
+       return True
+    else:
+       # The machine does NOT respond the ICMP request
+       logging.debug("{} ICMP_IGNORED".format(SystemUnderTest))
+       return False
+
+
 # Function to reset the System Under Test    
-def execute_reset(SystemUnderTest, Timezone, RelayPin, Count):
+def execute_reset(SystemUnderTest, Timezone, RelayPin):
     ts = datetime.now(pytz.timezone(Timezone))
     tsString = str(ts)
     string0 = "\nReset executed at: {}\n".format(tsString) #formats string with timestamp
@@ -54,17 +67,10 @@ def execute_reset(SystemUnderTest, Timezone, RelayPin, Count):
     logging.debug(string2)
     logging.debug("Please wait while the reset is confirmed...")
     try:
-      result = ping(SystemUnderTest, verbose=False, count = Count, interval = 2)
-      # the machine responds the ICMP request
-      if result.success():
-         logging.debug("{} ICMP_REPLIED".format(SystemUnderTest))
-         #the machine does NOT respond the ICMP request
-      else:
-         logging.debug("{} ICMP_IGNORED".format(SystemUnderTest))
-         # no DNS resolution for host
+        verify_ping(SystemUnderTest, 20) # Parameters are (SystemUnderTest, Count)
     except socket.error:
-      #pass
-      logging.debug("{} DNS_NO_RESOLUTION".format(SystemUnderTest))
+        # No DNS resolution for host  
+        logging.debug("{} DNS_NO_RESOLUTION".format(SystemUnderTest))
     logging.debug("-"*100)
   
 
@@ -80,17 +86,10 @@ def execute_stop(SystemUnderTest, Timezone, RelayPin, Count):
     logging.debug("Verifying stop was executed...")
     time.sleep(3) #wait 3 seconds before pinging to make sure load is completely off
     try:
-      result = ping(SystemUnderTest, verbose=False, count = Count, interval = 2) 
-      # the machine responds the ICMP request
-      if result.success():
-         logging.debug("{} ICMP_REPLIED".format(SystemUnderTest))
-         #the machine does NOT respond the ICMP request
-      else:
-         logging.debug("{} ICMP_IGNORED".format(SystemUnderTest))
-         # no DNS resolution for host
+        verify_ping(SystemUnderTest, 5) # Parameters are (SystemUnderTest, Count)
     except socket.error:
-         #pass
-         logging.debug("{} DNS_NO_RESOLUTION".format(SystemUnderTest)
+        # No DNS resolution for host 
+        logging.debug("{} DNS_NO_RESOLUTION".format(SystemUnderTest)
     logging.debug("-"*100)
 
                        
@@ -105,16 +104,9 @@ def execute_start(SystemUnderTest, Timezone, RelayPin, Count):
     logging.debug(string1) #prints string 1 with hostname
     logging.debug("Verifying start was executed...")
     try:
-      result = ping(SystemUnderTest, verbose=False, count = Count, interval = 2)
-      # the machine responds the ICMP request
-      if result.success():
-         logging.debug("{} ICMP_REPLIED".format(SystemUnderTest))
-         #the machine does NOT respond the ICMP request
-      else:
-         logging.debug("{} ICMP_IGNORED".format(SystemUnderTest))
-         # no DNS resolution for host
+      verify_ping(SystemUnderTest, 20) # Parameters are (SystemUnderTest, Count)
     except socket.error:
-      #pass
+      # No DNS resolution for host 
       logging.debug("{} DNS_NO_RESOLUTION".format(SystemUnderTest))
     logging.debug("-"*100)                    
 
@@ -127,22 +119,19 @@ def execute_status(SystemUnderTest, Timezone, RelayPin, Count):
     logging.debug(string0) #print time stamp when reset occurs
     logging.debug("Checking status...")
     try:
-      result = ping(SystemUnderTest, verbose=False, count = Count, interval = 2)
-      # the machine responds the ICMP request
-      if result.success():
-         logging.debug("{} ICMP_REPLIED".format(SystemUnderTest))
+      result = verify_ping(SystemUnderTest, 20) # Parameters are (SystemUnderTest, Count)
+      if(result == True):
+         # System is online and responding
          logging.debug("STATUS: ON")
-         #the machine does NOT respond the ICMP request
       else:
-         logging.debug("{} ICMP_IGNORED".format(SystemUnderTest))
+         # System is offline
          logging.debug("STATUS: OFF")
-         # no DNS resolution for host
     except socket.error:
-      #pass
+      # No DNS resolution for host
       logging.debug("{} DNS_NO_RESOLUTION".format(SystemUnderTest))
     logging.debug("-"*100)
 
-                       
+
 def on_connect(client, userdata, flags, rc):
     logging.debug(f"Connected with result code {rc}")
     # subscribe, which need to put into on_connect
@@ -162,7 +151,7 @@ def publish(self, topic, data, qos=1, retain=False):
 def on_message(client, userdata, msg):
   if(Load1):
     if msg.payload.decode() == "reset1":
-       execute_reset(SystemUnderTest1, Timezone, Relay1Pin, 20) # Parameters are (SystemUnderTest, Timezone, RelayPin, Count)
+       execute_reset(SystemUnderTest1, Timezone, Relay1Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
 
     if msg.payload.decode() == "stop1":
        execute_stop(SystemUnderTest1, Timezone, Relay1Pin, 5) # Parameters are (SystemUnderTest, Timezone, RelayPin, Count)
