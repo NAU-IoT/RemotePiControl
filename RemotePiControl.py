@@ -40,7 +40,7 @@ lgpio.gpio_claim_output(Z, Relay3Pin) #set Relay3Pin as output
 
 
 # Function to ping System Under Test to see if it is responding
-def verify_ping(SystemUnderTest, Count)
+def verify_ping(SystemUnderTest, Count):
     result = ping(SystemUnderTest, verbose=False, count = Count, interval = 2)
     if result.success():
        # The machine responds the ICMP request
