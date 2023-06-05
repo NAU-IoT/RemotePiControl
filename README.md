@@ -125,6 +125,7 @@ A normal standalone relay is fine for use, but the relay hat can be found here: 
     ```
     sudo apt-get install mosquitto mosquitto-clients
     ```
+    
     ```
     sudo systemctl enable mosquitto
     ````
@@ -134,8 +135,13 @@ A normal standalone relay is fine for use, but the relay hat can be found here: 
     ```
 
 - Create your own mosquitto configuration file:
-   - `cd /etc/mosquitto/conf.d`
-   - `sudo nano YOUR_FILE_NAME.conf`
+   ```
+   cd /etc/mosquitto/conf.d
+   ```
+   
+   ```
+   sudo nano YOUR_FILE_NAME.conf
+   ```
    - paste these lines for insecure connection:
         
        ```
@@ -143,6 +149,7 @@ A normal standalone relay is fine for use, but the relay hat can be found here: 
         
        listener 1883
        ```
+       
    - paste these lines for secure connection:
        
        ```
@@ -158,41 +165,103 @@ A normal standalone relay is fine for use, but the relay hat can be found here: 
         
        keyfile /SOME/PATH/TO/server.key
        ``` 
-   - Restart mosquitto service to recognize conf changes `sudo systemctl restart mosquitto.service`  
-   - Check status to ensure mosquitto restarted successfully `sudo systemctl status mosquitto.service`
+   - Restart mosquitto service to recognize conf changes: 
+   ```
+   sudo systemctl restart mosquitto.service
+   ```  
+   - Check status to ensure mosquitto restarted successfully: 
+   ```
+   sudo systemctl status mosquitto.service
+   ```
    - *refer to https://mosquitto.org/man/mosquitto-conf-5.html for conf file documentation*
 
 - Install the paho.mqtt library:
-   - `git clone https://github.com/eclipse/paho.mqtt.python`
-   - `cd paho.mqtt.python`
-   - `sudo python3 setup.py install`
+   ```
+   git clone https://github.com/eclipse/paho.mqtt.python
+   ```
+   ```
+   cd paho.mqtt.python
+   ```
+   ```
+   sudo python3 setup.py install
+   ```
 
 - Install the GPIO package:
-   - On Raspbian: `sudo apt-get install rpi.gpio`
-   - On Ubuntu: `sudo apt install python3-lgpio`
+   - On Raspbian: 
+   ```
+   sudo apt-get install rpi.gpio
+   ```
+   - On Ubuntu: 
+   ```
+   sudo apt install python3-lgpio
+   ```
    
-- Install the pytz timezone library: `pip install pytz`
+- Install the pytz timezone library: 
+```
+pip install pytz
+```
 
-- Install the pythonping library: `sudo pip install pythonping`
+- Install the pythonping library: 
+```
+sudo pip install pythonping
+```
 
 After installing dependencies: 
 
 ## Steps:
 
-- Clone this repo to get necessary files `git clone https://github.com/NAU-IoT/RemotePiControl.git`
-- Change into RemotePiControl directory `cd RemotePiControl`
-- Change RPCConfiguration.py variable names and paths according to your implementation `nano RPCConfiguration.py`
-- Verify that permissions are set so that the script is executable by typing `chmod +x RemotePiControl.py` in the command line
-- To use TLS set, uncomment lines 128-130 and change 1883 to 8883 on line 133
+- Clone this repo to get necessary files: 
+```
+git clone https://github.com/NAU-IoT/RemotePiControl.git
+```
+- Change into RemotePiControl directory: 
+```
+cd RemotePiControl
+```
+- Change RPCConfiguration.py variable names and paths according to your implementation: 
+```
+nano RPCConfiguration.py
+```
+- Verify that permissions are set so that the script is executable by running: 
+```
+chmod +x RemotePiControl.py
+```
+- To use TLS set, uncomment lines 202-204 in RemotePiControl.py and change Port to 8883 in RPCConfiguration.py
 - IF USING TLS SET: ensure keyfile has the correct permissions for the user to run the script without error
-   - If getting error "Error: Problem setting TLS options: File not found." use command `sudo chmod 640 YourKeyFile.key` (sets permissions so that the user and group are able to read the keyfile)    
-- Type `./RemotePiControl.py` into the command line to execute the script
-   - Can also use `python3 RemotePiControl.py`
+   - If getting error "Error: Problem setting TLS options: File not found." use command:
+     - (sets permissions so that the user and group are able to read the keyfile) 
+   ```
+   sudo chmod 640 YourKeyFile.key
+   ```
+- Execute the script:
+```
+./RemotePiControl.py
+```
+   - Can also use: 
+   ```
+   python3 RemotePiControl.py
+   ```
 - Publish reset command to topic from client using command:
    
-   WITHOUT TLS: `mosquitto_pub -p 1883 -t YOUR_TOPIC -h YOUR_BROKER_IP -m "reset"`
+   WITHOUT TLS: 
    
-   WITH TLS: `mosquitto_pub --cafile YOUR_CAFILE.crt --cert YOUR_CERTFILE.crt --key YOUR_KEYFILE.key -p 8883 -d -h YOUR_BROKER_IP -t YOUR_TOPIC -m "reset"`
+   ```
+   mosquitto_pub -p PORT_NUMBER -t YOUR_TOPIC -h YOUR_BROKER_IP -m "reset/start/stop/status"
+   ```
+   
+   example command:
+   ```
+   mosquitto_pub -p 1883 -t HomeNetwork -h localhost -m "reset"
+   ```
+   
+   WITH TLS: 
+   ```
+   mosquitto_pub --cafile YOUR_CAFILE.crt --cert YOUR_CERTFILE.crt --key YOUR_KEYFILE.key -p 8883 -d -h YOUR_BROKER_IP -t YOUR_TOPIC -m "reset/start/stop/status"
+   ```
+   example command:
+   ```
+   mosquitto_pub --cafile /home/michael/cafile.crt --cert /home/michael/certfile.crt --key /home/michael/keyfile.key -p 8883 -d -h localhost -t HomeNetwork -m "reset"
+   ```
 
 - Done!
 
@@ -201,23 +270,57 @@ After installing dependencies:
 
 Note: If using standalone relay rather than relay hat, change "26" to "4" on line 30 of RemotePiControl.py and hook your signal jumper up to pin 7 of the pi4.
 
-  - Create logs directory inside of the RemotePiControl directory `mkdir logs`
+  - Create logs directory inside of the RemotePiControl directory: 
+  ```
+  mkdir logs
+  ```
   - Create a systemd entry 
-      - Change into Systemctl directory `cd RemotePiControl/Systemctl` 
-      - Modify line 8 of RemotePiControl.service to reflect the correct path `nano RemotePiControl.service`
-      - Copy the .service file to correct location `sudo cp RemotePiControl.service /etc/systemd/system`
-  - Modify RemotePiControl.sh to include the correct paths (located inside of the Systemctl directory) `nano RemotePiControl.sh`
-  - Set file permissions for RemotePiControl.sh `sudo chmod 744 RemotePiControl/Systemctl/RemotePiControl.sh`
-      - If this step is unsuccessful, here are potential solutions:
-         - Change permissions further `sudo chmod 755 RemotePiControl/Systemctl/RemotePiControl.sh`
-         - Change permissions for the directory as well `sudo chmod 755 RemotePiControl`
-  - Enable the service 
-      - `sudo systemctl daemon-reload`
-      - `sudo systemctl enable RemotePiControl.service`
+      - Change into Systemctl directory: 
+      ```
+      cd RemotePiControl/Systemctl
+      ``` 
+      - Modify line 8 of RemotePiControl.service to reflect the correct path: 
+      ```
+      nano RemotePiControl.service
+      ```
+      - Copy the .service file to correct location: 
+      ```
+      sudo cp RemotePiControl.service /etc/systemd/system
+      ```
+  - Modify RemotePiControl.sh to include the correct paths (located inside of the Systemctl directory): 
+  ```
+  nano RemotePiControl.sh
+  ```
+  - Set file permissions for RemotePiControl.sh: 
+  ```
+  sudo chmod 744 RemotePiControl/Systemctl/RemotePiControl.sh
+  ```
+  - If previous step is unsuccessful, here are potential solutions:
+     - Change permissions further: 
+     ```
+     sudo chmod 755 RemotePiControl/Systemctl/RemotePiControl.sh
+     ```
+     - Change permissions for the directory as well: 
+     ```
+     sudo chmod 755 RemotePiControl
+     ```
+  - Enable the service: 
+      ```
+      sudo systemctl daemon-reload
+      ```
+      ```
+      sudo systemctl enable RemotePiControl.service
+      ```
       
-  - Start the service `sudo systemctl start RemotePiControl.service`
+  - Start the service: 
+  ```
+  sudo systemctl start RemotePiControl.service
+  ```
   
-  - Check the status of the service `sudo systemctl status RemotePiControl.service`
+  - Check the status of the service: 
+  ```
+  sudo systemctl status RemotePiControl.service
+  ```
   
   - Done! The service should now run on boot. 
          
