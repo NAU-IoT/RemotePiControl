@@ -136,15 +136,6 @@ def on_connect(client, userdata, flags, rc):
     client.subscribe(Topic)
 
                        
-# Define the publish function
-def publish(self, topic, data, qos=1, retain=False):
-    """
-      Publish to a topic.
-    """
-    logging.info("Publishing to topic %s" % topic)
-    self.client.publish(topic, data, qos=qos, retain=retain)
-
-                       
 # The callback function, it will be triggered when receiving messages
 def on_message(client, userdata, msg):
   if(Load1):
@@ -169,6 +160,7 @@ def on_message(client, userdata, msg):
 
     if msg.payload.decode() == "start1":
        execute_start(SystemUnderTest2, Timezone, Relay2Pin, 20) # Parameters are (SystemUnderTest, Timezone, RelayPin, Count)
+
         
     if msg.payload.decode() == "status1":
        execute_status(SystemUnderTest2, Timezone, Relay2Pin, 5) # Parameters are (SystemUnderTest, Timezone, RelayPin, Count)

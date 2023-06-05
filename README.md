@@ -1,7 +1,7 @@
 # RemotePiControl
 This repository contains code to facilitate a remote reset, remote stop, remote start, or status message on a RaspberryPi. 
 
-This solution can also be done using a D1MiniPro or RaspberryPi, which are both documented here.
+This solution can also be done using a D1MiniPro. The D1MiniPro solution is not fully developed, and can only implement the reset function. You can find this solution documented here: https://github.com/NAU-IoT/D1Mini-RemotePiReset 
 
 
 # Running with Docker
@@ -50,6 +50,7 @@ mkdir -p Data/RPCData
 ```
 docker run --privileged -v YOUR_VOLUME_NAME:/Data -p YOUR_PORT_NUMBER:CONTAINER_PORT_NUMBER -t -i -d --restart unless-stopped remotepicontrol
 ```
+
 - Verify container is running: 
 ```
 docker ps
@@ -66,7 +67,7 @@ docker ps
    mosquitto_pub -p PORT_NUMBER -t YOUR_TOPIC -h YOUR_BROKER_IP -m "reset/start/stop/status"
    ```
    
-   example command:
+   Example command:
    ```
    mosquitto_pub -p 1883 -t HomeNetwork -h localhost -m "reset"
    ```
@@ -75,7 +76,7 @@ docker ps
    ```
    mosquitto_pub --cafile YOUR_CAFILE.crt --cert YOUR_CERTFILE.crt --key YOUR_KEYFILE.key -p 8883 -d -h YOUR_BROKER_IP -t YOUR_TOPIC -m "reset/start/stop/status"
    ```
-   example command:
+   Example command:
    ```
    mosquitto_pub --cafile /home/michael/cafile.crt --cert /home/michael/certfile.crt --key /home/michael/keyfile.key -p 8883 -d -h localhost -t HomeNetwork -m "reset"
    ```
@@ -226,7 +227,7 @@ nano RPCConfiguration.py
 ```
 chmod +x RemotePiControl.py
 ```
-- To use TLS set, uncomment lines 202-204 in RemotePiControl.py and change Port to 8883 in RPCConfiguration.py
+- To use TLS set, uncomment lines 192-194 in RemotePiControl.py and change Port to 8883 in RPCConfiguration.py
 - IF USING TLS SET: ensure keyfile has the correct permissions for the user to run the script without error
    - If getting error "Error: Problem setting TLS options: File not found." use command:
      - (sets permissions so that the user and group are able to read the keyfile) 
