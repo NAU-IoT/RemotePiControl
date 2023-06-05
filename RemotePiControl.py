@@ -31,12 +31,10 @@ Relay1Pin = 26  #initialize Relay1Pin to GPIO 26, which is actually pin 37, if u
 Relay2Pin = 20  #initialize Relay2Pin to GPIO 20, which is actually pin 38, if using standalone relay, hook jumper up to this pin
 Relay3Pin = 21  #initialize Relay3Pin to GPIO 21, which is actually pin 40, if using standalone relay, hook jumper up to this pin
 
-X = lgpio.gpiochip_open(0)      #enable gpio
-lgpio.gpio_claim_output(X, Relay1Pin) #set Relay1Pin as output
-Y = lgpio.gpiochip_open(0)      #enable gpio
-lgpio.gpio_claim_output(Y, Relay2Pin) #set Relay2Pin as output
-Z = lgpio.gpiochip_open(0)      #enable gpio
-lgpio.gpio_claim_output(Z, Relay3Pin) #set Relay3Pin as output
+h = lgpio.gpiochip_open(0)      #enable gpio
+lgpio.gpio_claim_output(h, Relay1Pin) #set Relay1Pin as output
+lgpio.gpio_claim_output(h, Relay2Pin) #set Relay2Pin as output
+lgpio.gpio_claim_output(h, Relay3Pin) #set Relay3Pin as output
 
 
 # Function to ping System Under Test to see if it is responding
