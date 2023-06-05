@@ -27,7 +27,7 @@ h = lgpio.gpiochip_open(0)      #enable gpio
 lgpio.gpio_claim_output(h, Relay1Pin) #set Relay1Pin as output
 
 def on_connect(client, userdata, flags, rc):
-    print(f"Connected with result code {rc}")
+    logging.debug(f"Connected with result code {rc}")
     # subscribe, which need to put into on_connect
     client.subscribe(Topic)
 
