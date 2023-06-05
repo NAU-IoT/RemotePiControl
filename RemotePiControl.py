@@ -73,7 +73,7 @@ def execute_reset(SystemUnderTest, Timezone, RelayPin):
   
 
 # Function to stop the System Under Test       
-def execute_stop(SystemUnderTest, Timezone, RelayPin, Count):
+def execute_stop(SystemUnderTest, Timezone, RelayPin):
     ts = datetime.now(pytz.timezone(Timezone))
     tsString = str(ts)
     string0 = "\nStop executed at: {}\n".format(tsString) #formats string with timestamp
@@ -92,7 +92,7 @@ def execute_stop(SystemUnderTest, Timezone, RelayPin, Count):
 
                        
 # Function to start the System Under Test                      
-def execute_start(SystemUnderTest, Timezone, RelayPin, Count):
+def execute_start(SystemUnderTest, Timezone, RelayPin):
     ts = datetime.now(pytz.timezone(Timezone))
     tsString = str(ts)
     string0 = "\nStart executed at: {}\n".format(tsString) #formats string with timestamp
@@ -110,7 +110,7 @@ def execute_start(SystemUnderTest, Timezone, RelayPin, Count):
 
                        
 # Function to get the current status of the System Undert Test
-def execute_status(SystemUnderTest, Timezone, RelayPin, Count):
+def execute_status(SystemUnderTest, Timezone, RelayPin):
     ts = datetime.now(pytz.timezone(Timezone))
     tsString = str(ts)
     string0 = "\nStatus executed at: {}\n".format(tsString) #formats string with timestamp
