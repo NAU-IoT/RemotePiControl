@@ -130,6 +130,7 @@ def execute_status(SystemUnderTest, Timezone, RelayPin):
     logging.debug("-"*100)
 
 
+# define on_connect function
 def on_connect(client, userdata, flags, rc):
     # logging.debug(f"Connected with result code {rc}")
     # subscribe, which need to put into on_connect
@@ -185,7 +186,7 @@ client = mqtt.Client()
 client.on_connect = on_connect
 client.on_message = on_message
 
-# set the will message, when the Raspberry Pi is powered off, or the network is interrupted
+# Set the will message, when the client unexpedetly disconnects or terminates its connection, this will publish
 client.will_set(Topic, b'{"status": "Off"}')
 
 #establish tls set for secure connection over port 8883
@@ -193,8 +194,8 @@ client.will_set(Topic, b'{"status": "Off"}')
 #               certfile=Certfile,
 #               keyfile=Keyfile)
 
-# create connection, the three parameters are broker address, broker port numbe>
-client.connect(Broker, Port, 60) #IP is the common name on the server cert
+# Create connection, the three parameters are broker address, broker port number, and keep alive time
+client.connect(Broker, Port, 60) #If using TLS, Broker is the common name on the server cert
 
-# set the network loop blocking, it will not actively end the program before ca>
+# set the network loop blocking, maintains the network connection and prevents program execution
 client.loop_forever()
