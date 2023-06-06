@@ -87,7 +87,7 @@ def execute_stop(SystemUnderTest, Timezone, RelayPin):
         verify_ping(SystemUnderTest, 5) # Parameters are (SystemUnderTest, Count)
     except socket.error:
         # No DNS resolution for host 
-        logging.debug("{} DNS_NO_RESOLUTION".format(SystemUnderTest)
+        logging.debug("{} DNS_NO_RESOLUTION".format(SystemUnderTest))
     logging.debug("-"*100)
 
                        
