@@ -131,7 +131,7 @@ def execute_status(SystemUnderTest, Timezone, RelayPin):
 
 
 def on_connect(client, userdata, flags, rc):
-    logging.debug(f"Connected with result code {rc}")
+    # logging.debug(f"Connected with result code {rc}")
     # subscribe, which need to put into on_connect
     client.subscribe(Topic)
 
