@@ -280,7 +280,7 @@ Note: If using standalone relay rather than relay hat, change "26" to "4" on lin
       ```
       cd RemotePiControl/Systemctl
       ``` 
-      - Modify line 8 of RemotePiControl.service to reflect the correct path: 
+      - Modify line 9 of RemotePiControl.service to reflect the correct path: 
       ```
       nano RemotePiControl.service
       ```
