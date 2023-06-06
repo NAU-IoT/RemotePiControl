@@ -3,6 +3,28 @@ This repository contains code to facilitate a remote reset, remote stop, remote 
 
 This solution can also be done using a D1MiniPro. The D1MiniPro solution is not fully developed, and can only implement the reset function. You can find this solution documented here: https://github.com/NAU-IoT/D1Mini-RemotePiReset 
 
+## Components:
+
+**Raspberry Pi 4**
+
+   Used to interpret reset command over MQTT and send signal to relay
+    
+**RASPBERRY PI IO Board**
+
+   Wired through the relay, this is what is being controlled
+    
+**RELAY**
+
+   Wired so that when the Pi 4 sends a signal, the relay cuts or allows power to the IO Board:
+   
+   - Cut power for 5 seconds (reset)
+      
+   - Indefinitely cut power (stop)
+      
+   - Indefinitely allow power (start)
+
+A normal standalone relay is fine for use, but the relay hat can be found here: https://www.amazon.com/gp/product/B07CZL2SKN/ref=ppx_yo_dt_b_asin_title_o00_s01?ie=UTF8&psc=1
+
 
 # Running with Docker
 
@@ -98,28 +120,6 @@ docker ps
 
 
 # Running with Python and Systemctl  
-
-## Components:
-
-**Raspberry Pi 4**
-
-   Used to interpret reset command over MQTT and send signal to relay
-    
-**RASPBERRY PI IO Board**
-
-   Wired through the relay, this is what is being controlled
-    
-**RELAY**
-
-   Wired so that when the Pi 4 sends a signal, the relay cuts or allows power to the IO Board:
-   
-   - for 5 seconds(restart)
-      
-   - indefinitely cut power(stop)
-      
-   - indefinitely allow power(start)
-
-A normal standalone relay is fine for use, but the relay hat can be found here: https://www.amazon.com/gp/product/B07CZL2SKN/ref=ppx_yo_dt_b_asin_title_o00_s01?ie=UTF8&psc=1
 
 ## Dependencies:
  - Install mosquitto service:
