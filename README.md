@@ -61,7 +61,8 @@ docker build -t remotepicontrol .
 mkdir -p Data/RPCData
 ```
 - Create a volume to store data inside the directory created in the previous step: 
-```docker volume create --driver local 
+```
+docker volume create --driver local 
     --opt type=none 
     --opt device=/SOME/LOCAL/DIRECTORY 
     --opt o=bind 
@@ -91,7 +92,7 @@ docker ps
    
    Example command:
    ```
-   mosquitto_pub -p 1883 -t HomeNetwork -h localhost -m "reset"
+   mosquitto_pub -p 31883 -t RemotePiControl -h localhost -m "reset"
    ```
    
    WITH TLS: 
@@ -100,7 +101,7 @@ docker ps
    ```
    Example command:
    ```
-   mosquitto_pub --cafile /home/michael/cafile.crt --cert /home/michael/certfile.crt --key /home/michael/keyfile.key -p 8883 -d -h localhost -t HomeNetwork -m "reset"
+   mosquitto_pub --cafile /home/michael/cafile.crt --cert /home/michael/certfile.crt --key /home/michael/keyfile.key -p 8883 -d -h localhost -t RemotePiControl -m "reset"
    ```
   
  - To enter the container:
