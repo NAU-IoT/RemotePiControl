@@ -117,7 +117,7 @@ def execute_status(SystemUnderTest, Timezone, RelayPin):
     logging.debug(string0) #print time stamp when reset occurs
     logging.debug("Checking status...")
     try:
-      result = verify_ping(SystemUnderTest, 20) # Parameters are (SystemUnderTest, Count)
+      result = verify_ping(SystemUnderTest, 5) # Parameters are (SystemUnderTest, Count)
       if(result == True):
          # System is online and responding
          logging.debug("STATUS: ON")
@@ -132,7 +132,7 @@ def execute_status(SystemUnderTest, Timezone, RelayPin):
 
 # define on_connect function
 def on_connect(client, userdata, flags, rc):
-    # logging.debug(f"Connected with result code {rc}")
+    logging.debug(f"Connected with result code {rc}")
     # subscribe, which need to put into on_connect
     client.subscribe(Topic)
 
@@ -153,17 +153,17 @@ def on_message(client, userdata, msg):
        execute_status(SystemUnderTest1, Timezone, Relay1Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
          
   if(Load2):    
-    if msg.payload.decode() == "reset1":
+    if msg.payload.decode() == "reset2":
        execute_reset(SystemUnderTest2, Timezone, Relay2Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
 
-    if msg.payload.decode() == "stop1":
+    if msg.payload.decode() == "stop2":
        execute_stop(SystemUnderTest2, Timezone, Relay2Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
 
-    if msg.payload.decode() == "start1":
+    if msg.payload.decode() == "start2":
        execute_start(SystemUnderTest2, Timezone, Relay2Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
 
         
-    if msg.payload.decode() == "status1":
+    if msg.payload.decode() == "status2":
        execute_status(SystemUnderTest2, Timezone, Relay2Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
   
   if(Load3):      
