@@ -50,7 +50,7 @@ def verify_ping(SystemUnderTest, Count):
        return False
 
 
-# Function to reset the System Under Test    
+# Function to reset the System Under Test
 def execute_reset(SystemUnderTest, Timezone, RelayPin):
     ts = datetime.now(pytz.timezone(Timezone))
     tsString = str(ts)
@@ -67,12 +67,12 @@ def execute_reset(SystemUnderTest, Timezone, RelayPin):
     try:
         verify_ping(SystemUnderTest, 20) # Parameters are (SystemUnderTest, Count)
     except socket.error:
-        # No DNS resolution for host  
+        # No DNS resolution for host
         logging.debug("{} DNS_NO_RESOLUTION".format(SystemUnderTest))
     logging.debug("-"*100)
-  
 
-# Function to stop the System Under Test       
+
+# Function to stop the System Under Test
 def execute_stop(SystemUnderTest, Timezone, RelayPin):
     ts = datetime.now(pytz.timezone(Timezone))
     tsString = str(ts)
@@ -86,17 +86,17 @@ def execute_stop(SystemUnderTest, Timezone, RelayPin):
     try:
         verify_ping(SystemUnderTest, 5) # Parameters are (SystemUnderTest, Count)
     except socket.error:
-        # No DNS resolution for host 
+        # No DNS resolution for host
         logging.debug("{} DNS_NO_RESOLUTION".format(SystemUnderTest))
     logging.debug("-"*100)
 
-                       
-# Function to start the System Under Test                      
+
+# Function to start the System Under Test
 def execute_start(SystemUnderTest, Timezone, RelayPin):
     ts = datetime.now(pytz.timezone(Timezone))
     tsString = str(ts)
     string0 = "\nStart executed at: {}\n".format(tsString) #formats string with timestamp
-    logging.debug(string0) #print time stamp when start occurs  
+    logging.debug(string0) #print time stamp when start occurs
     lgpio.gpio_write(h, RelayPin, 0) #set Relay1Pin low
     string1 = "{} has been started".format(SystemUnderTest) #formats string with hostname
     logging.debug(string1) #prints string 1 with hostname
@@ -104,11 +104,11 @@ def execute_start(SystemUnderTest, Timezone, RelayPin):
     try:
       verify_ping(SystemUnderTest, 20) # Parameters are (SystemUnderTest, Count)
     except socket.error:
-      # No DNS resolution for host 
+      # No DNS resolution for host
       logging.debug("{} DNS_NO_RESOLUTION".format(SystemUnderTest))
-    logging.debug("-"*100)                    
+    logging.debug("-"*100)
 
-                       
+
 # Function to get the current status of the System Undert Test
 def execute_status(SystemUnderTest, Timezone, RelayPin):
     ts = datetime.now(pytz.timezone(Timezone))
@@ -136,7 +136,7 @@ def on_connect(client, userdata, flags, rc):
     # subscribe, which need to put into on_connect
     client.subscribe(Topic)
 
-                       
+
 # The callback function, it will be triggered when receiving messages
 def on_message(client, userdata, msg):
   if(Load1):
@@ -148,11 +148,11 @@ def on_message(client, userdata, msg):
 
     if msg.payload.decode() == "start1":
        execute_start(SystemUnderTest1, Timezone, Relay1Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
-        
+
     if msg.payload.decode() == "status1":
        execute_status(SystemUnderTest1, Timezone, Relay1Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
-         
-  if(Load2):    
+
+  if(Load2):
     if msg.payload.decode() == "reset2":
        execute_reset(SystemUnderTest2, Timezone, Relay2Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
 
@@ -162,11 +162,10 @@ def on_message(client, userdata, msg):
     if msg.payload.decode() == "start2":
        execute_start(SystemUnderTest2, Timezone, Relay2Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
 
-        
     if msg.payload.decode() == "status2":
        execute_status(SystemUnderTest2, Timezone, Relay2Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
-  
-  if(Load3):      
+
+  if(Load3):
     if msg.payload.decode() == "reset3":
        execute_reset(SystemUnderTest3, Timezone, Relay3Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
 
@@ -175,12 +174,12 @@ def on_message(client, userdata, msg):
 
     if msg.payload.decode() == "start3":
        execute_start(SystemUnderTest3, Timezone, Relay3Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
-        
+
     if msg.payload.decode() == "status3":
        execute_status(SystemUnderTest3, Timezone, Relay3Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
 
 #create client instance
-client = mqtt.Client()                       
+client = mqtt.Client()
 
 # Set callback functions for client
 client.on_connect = on_connect
