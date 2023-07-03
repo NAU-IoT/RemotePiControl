@@ -41,9 +41,9 @@ sudo docker run hello-world
 ```
 git clone https://github.com/NAU-IoT/RemotePiControl.git
 ```
-- Change into docker directory: 
+- Change into directory: 
 ```
-cd RemotePiControl/rpc-docker
+cd RemotePiControl
 ```
 - Modify RPCConfiguration.py to match your current implementation: 
    - Refer to comments for necessary changes
