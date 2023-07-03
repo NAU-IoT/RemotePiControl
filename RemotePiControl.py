@@ -140,31 +140,31 @@ def on_connect(client, userdata, flags, rc):
 # The callback function, it will be triggered when receiving messages
 def on_message(client, userdata, msg):
   if(Load1):
-    if msg.payload.decode() == "reset1":
+    if msg.payload.decode() == "resetIOB":
        execute_reset(SystemUnderTest1, Timezone, Relay1Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
-    if msg.payload.decode() == "stop1":
+    if msg.payload.decode() == "stopIOB":
        execute_stop(SystemUnderTest1, Timezone, Relay1Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
-    if msg.payload.decode() == "start1":
+    if msg.payload.decode() == "startIOB":
        execute_start(SystemUnderTest1, Timezone, Relay1Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
-    if msg.payload.decode() == "status1":
+    if msg.payload.decode() == "statusIOB":
        execute_status(SystemUnderTest1, Timezone, Relay1Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
   if(Load2):
-    if msg.payload.decode() == "reset2":
+    if msg.payload.decode() == "resetNANO":
        execute_reset(SystemUnderTest2, Timezone, Relay2Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
-    if msg.payload.decode() == "stop2":
+    if msg.payload.decode() == "stopNANO":
        execute_stop(SystemUnderTest2, Timezone, Relay2Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
-    if msg.payload.decode() == "start2":
+    if msg.payload.decode() == "startNANO":
        execute_start(SystemUnderTest2, Timezone, Relay2Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
-    if msg.payload.decode() == "status2":
+    if msg.payload.decode() == "statusNANO":
        execute_status(SystemUnderTest2, Timezone, Relay2Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
   if(Load3):
-    if msg.payload.decode() == "reset3":
+    if msg.payload.decode() == "resetOPT":
        execute_reset(SystemUnderTest3, Timezone, Relay3Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
-    if msg.payload.decode() == "stop3":
+    if msg.payload.decode() == "stopOPT":
        execute_stop(SystemUnderTest3, Timezone, Relay3Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
-    if msg.payload.decode() == "start3":
+    if msg.payload.decode() == "startOPT":
        execute_start(SystemUnderTest3, Timezone, Relay3Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
-    if msg.payload.decode() == "status3":
+    if msg.payload.decode() == "statusOPT":
        execute_status(SystemUnderTest3, Timezone, Relay3Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
   if msg.payload.decode() == "resetall":
     if(Load1):
