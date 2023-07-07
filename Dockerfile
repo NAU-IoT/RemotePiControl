@@ -24,7 +24,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # Copy necessary files to local docker container environment
 COPY mosquitto.conf /etc/mosquitto/
-ADD RPCConfiguration.py /RPCConfiguration.py
+ADD RPCConfiguration.py /RPCConfiguration.yaml
 ADD RemotePiControl.py /RemotePiControl.py
 ADD RemotePiControl.sh /RemotePiControl.sh
 ADD crontab /etc/cron.d/simple-cron
