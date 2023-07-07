@@ -7,34 +7,41 @@ from pythonping import ping
 from datetime import datetime
 import pytz
 import time
-import RPCConfiguration as config
+import yaml
 
-#enable logging
-logging.basicConfig(level=logging.DEBUG)
+def load_config():
+   # Load the YAML file
+   with open('/RPCConfiguration.yaml', 'r') as file:
+       config = yaml.safe_load(file)
+   # Globalize variables
+   global Topic
+   global Port
+   global Broker
+   global Load1
+   global Load2
+   global Load3
+   global SystemUnderTest1
+   global SystemUnderTest2
+   global SystemUnderTest3
+   global CA_Certs
+   global Certfile
+   global Keyfile
+   global Timezone
 
-#import variables from config file
-Topic = config.topic	#establishes topic
-Port = config.port
-SystemUnderTest1 = config.client1	#establishes system under test 1
-SystemUnderTest2 = config.client2	#establishes system under test 2
-SystemUnderTest3 = config.client3	#establishes system under test 3
-Broker = config.broker #establishes broker
-CA_Certs = config.cacert
-Certfile = config.certfile
-Keyfile = config.keyfile
-Timezone = config.timezone
-Load1 = config.load1
-Load2 = config.load2
-Load3 = config.load3
-
-Relay1Pin = 26  #initialize Relay1Pin to GPIO 26, which is actually pin 37, if using standalone relay, hook jumper up to this pin
-Relay2Pin = 20  #initialize Relay2Pin to GPIO 20, which is actually pin 38, if using standalone relay, hook jumper up to this pin
-Relay3Pin = 21  #initialize Relay3Pin to GPIO 21, which is actually pin 40, if using standalone relay, hook jumper up to this pin
-
-h = lgpio.gpiochip_open(0)      #enable gpio
-lgpio.gpio_claim_output(h, Relay1Pin) #set Relay1Pin as output
-lgpio.gpio_claim_output(h, Relay2Pin) #set Relay2Pin as output
-lgpio.gpio_claim_output(h, Relay3Pin) #set Relay3Pin as output
+   # Import variables from config file
+   Topic = config['topic']
+   Port = config['port']
+   Broker = config['broker']
+   Load1 = config['load1']
+   Load2 = config['load2']
+   Load3 = config['load3']
+   SystemUnderTest1 = config['client1']	#establishes system under test 1
+   SystemUnderTest2 = config['client2']	#establishes system under test 2
+   SystemUnderTest3 = config['client3']	#establishes system under test 3
+   CA_Certs = config['cacert']
+   Certfile = config['certfile']
+   Keyfile = config['keyfile']
+   Timezone = config['timezone']
 
 
 # Function to ping System Under Test to see if it is responding
@@ -195,23 +202,49 @@ def on_message(client, userdata, msg):
     if(Load3):
        execute_status(SystemUnderTest3, Timezone, Relay3Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
 
-#create client instance
-client = mqtt.Client()
 
-# Set callback functions for client
-client.on_connect = on_connect
-client.on_message = on_message
+def main():
+    # Load configuration
+    load_config()
+    #enable logging
+    logging.basicConfig(level=logging.DEBUG)
 
-# Set the will message, when the client unexpedetly disconnects or terminates its connection, this will publish
-client.will_set(Topic, b'{"status": "Off"}')
+    # Globalize variables
+    global Relay1Pin
+    global Relay2Pin
+    global Relay3Pin
+    global h
+   
+    Relay1Pin = 26  #initialize Relay1Pin to GPIO 26, which is actually pin 37, if using standalone relay, hook jumper up to this pin
+    Relay2Pin = 20  #initialize Relay2Pin to GPIO 20, which is actually pin 38, if using standalone relay, hook jumper up to this pin
+    Relay3Pin = 21  #initialize Relay3Pin to GPIO 21, which is actually pin 40, if using standalone relay, hook jumper up to this pin
+    
+    h = lgpio.gpiochip_open(0)      #enable gpio
+    lgpio.gpio_claim_output(h, Relay1Pin) #set Relay1Pin as output
+    lgpio.gpio_claim_output(h, Relay2Pin) #set Relay2Pin as output
+    lgpio.gpio_claim_output(h, Relay3Pin) #set Relay3Pin as output
+    
+    #create client instance
+    client = mqtt.Client()
+    
+    # Set callback functions for client
+    client.on_connect = on_connect
+    client.on_message = on_message
+    
+    # Set the will message, when the client unexpedetly disconnects or terminates its connection, this will publish
+    client.will_set(Topic, b'{"status": "Off"}')
+    
+    #establish tls set for secure connection over port 8883
+    #client.tls_set(ca_certs=CA_Certs,
+    #               certfile=Certfile,
+    #               keyfile=Keyfile)
+    
+    # Create connection, the three parameters are broker address, broker port number, and keep alive time
+    client.connect(Broker, Port, 60) #If using TLS, Broker is the common name on the server cert
+    
+    # set the network loop blocking, maintains the network connection and prevents program execution
+    client.loop_forever()
 
-#establish tls set for secure connection over port 8883
-#client.tls_set(ca_certs=CA_Certs,
-#               certfile=Certfile,
-#               keyfile=Keyfile)
 
-# Create connection, the three parameters are broker address, broker port number, and keep alive time
-client.connect(Broker, Port, 60) #If using TLS, Broker is the common name on the server cert
-
-# set the network loop blocking, maintains the network connection and prevents program execution
-client.loop_forever()
+if __name__ == "__main__":
+    main()

@@ -15,7 +15,7 @@ RUN apt-add-repository ppa:mosquitto-dev/mosquitto-ppa
 RUN apt-get install -y mosquitto mosquitto-clients cron
 
 # Install pip dependencies
-RUN pip install paho-mqtt rpi.gpio pytz pythonping
+RUN pip install paho-mqtt rpi.gpio pytz pythonping PyYAML
 
 # Install timezone dependencies and establish docker container timezone
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install tzdata
@@ -24,7 +24,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # Copy necessary files to local docker container environment
 COPY mosquitto.conf /etc/mosquitto/
-ADD RPCConfiguration.py /RPCConfiguration.py
+ADD RPCConfiguration.yaml /RPCConfiguration.yaml
 ADD RemotePiControl.py /RemotePiControl.py
 ADD RemotePiControl.sh /RemotePiControl.sh
 ADD crontab /etc/cron.d/simple-cron
