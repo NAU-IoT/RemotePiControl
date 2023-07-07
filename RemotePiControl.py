@@ -208,7 +208,12 @@ def main():
     load_config()
     #enable logging
     logging.basicConfig(level=logging.DEBUG)
-    
+
+    # Globalize variables
+    global Relay1Pin
+    global Relay2Pin
+    global Relay3Pin
+   
     Relay1Pin = 26  #initialize Relay1Pin to GPIO 26, which is actually pin 37, if using standalone relay, hook jumper up to this pin
     Relay2Pin = 20  #initialize Relay2Pin to GPIO 20, which is actually pin 38, if using standalone relay, hook jumper up to this pin
     Relay3Pin = 21  #initialize Relay3Pin to GPIO 21, which is actually pin 40, if using standalone relay, hook jumper up to this pin
