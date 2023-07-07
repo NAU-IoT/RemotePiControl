@@ -2,56 +2,41 @@
 
 FROM ubuntu:22.04
 
+# Update package list
 RUN apt-get update
 
-RUN apt-get install -y python3 python3-pip
+# Install apt dependencies
+RUN apt-get install -y python3 python3-pip python3-smbus python3-dev i2c-tools software-properties-common python3-lgpio
 
-RUN apt-get install -y python3-smbus python3-dev i2c-tools
-
-RUN apt-get install -y software-properties-common
-
+# Add latest mosquitto repo
 RUN apt-add-repository ppa:mosquitto-dev/mosquitto-ppa
 
-RUN apt-get -y install cron
+# Install mosqutto and cron
+RUN apt-get install -y mosquitto mosquitto-clients cron
 
-RUN apt-get install -y mosquitto mosquitto-clients
+# Install pip dependencies
+RUN pip install paho-mqtt rpi.gpio pytz pythonping
 
-COPY mosquitto.conf /etc/mosquitto/
-
-RUN pip3 install paho-mqtt
-
-RUN pip3 install rpi.gpio
-
-RUN apt install -y python3-lgpio
-
-RUN pip install pytz
-
-RUN pip install pythonping
-
+# Install timezone dependencies and establish docker container timezone
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install tzdata
-
 ENV TZ=America/Phoenix
-
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-RUN mkdir -p /Data
-
-RUN mkdir -p /Data/logs
-
+# Copy necessary files to local docker container environment
+COPY mosquitto.conf /etc/mosquitto/
 ADD RPCConfiguration.py /RPCConfiguration.py
-
 ADD RemotePiControl.py /RemotePiControl.py
-
 ADD RemotePiControl.sh /RemotePiControl.sh
-
 ADD crontab /etc/cron.d/simple-cron
 
+# Create necessary files and directories inside docker container
 RUN touch /var/log/cron.log
+RUN mkdir -p /Data
+RUN mkdir -p /Data/logs
 
+# Establish correct permissions for files
 RUN chmod 0644 /etc/cron.d/simple-cron
-
 RUN chmod +x /RemotePiControl.py
-
 RUN chmod +x /RemotePiControl.sh
 
 # sleep command to give mosquitto time to start before using.
