@@ -45,10 +45,10 @@ git clone https://github.com/NAU-IoT/RemotePiControl.git
 ```
 cd RemotePiControl
 ```
-- Modify RPCConfiguration.py to match your current implementation: 
+- Modify RPCConfiguration.yaml to match your current implementation: 
    - Refer to comments for necessary changes
 ```
-nano RPCConfiguration.py
+nano RPCConfiguration.yaml
 ```
 - OPTIONAL: To change the docker containers time zone, edit line 33 in the Dockerfile. A list of acceptable time zones can be found at https://en.wikipedia.org/wiki/List_of_tz_database_time_zones 
 - Build docker image in current directory:
@@ -85,7 +85,7 @@ docker ps
    
    WITHOUT TLS: 
    
-   IoT Team: PORT_NUMBER should be 31883 (number in RPCConfiguration.py)
+   IoT Team: PORT_NUMBER should be 31883 (number in RPCConfiguration.yaml)
    ```
    mosquitto_pub -p PORT_NUMBER -t YOUR_TOPIC -h YOUR_BROKER_IP -m "reset/start/stop/status"
    ```
@@ -119,6 +119,9 @@ docker ps
     ```
     - Log out and ssh back into system
 
+  - If error: `socket.gaierror: [Errno -2] Name or service not known`
+    - Most likely an issue with a DNS name/IP address not being recognized inside the configuration file.
+    - IoT Team: Confirm that your configuration file is correct and that you have the correct DNS resolution name for the desired network interface you want to access (WiFi vs. Ethernet)
 
 # Running with Python and Systemctl  
 
@@ -220,9 +223,9 @@ git clone https://github.com/NAU-IoT/RemotePiControl.git
 ```
 cd RemotePiControl
 ```
-- Change RPCConfiguration.py variable names and paths according to your implementation: 
+- Change RPCConfiguration.yaml variable names and paths according to your implementation: 
 ```
-nano RPCConfiguration.py
+nano RPCConfiguration.yaml
 ```
 - Verify that permissions are set so that the script is executable by running: 
 ```
@@ -332,7 +335,3 @@ Note: If using standalone relay rather than relay hat, change "26" to "4" on lin
   `socket.gaierror: [Errno -2] Name or service not known`
   
    - Most likely an issue with the DNS name or IP address not being recognized
-  
-
-      
-
