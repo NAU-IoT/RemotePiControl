@@ -46,15 +46,18 @@ def load_config():
 
 # Function to ping System Under Test to see if it is responding
 def verify_ping(SystemUnderTest, Count):
-    result = ping(SystemUnderTest, verbose=False, count = Count, interval = 2)
-    if result.success():
-       # The machine responds the ICMP request
-       logging.debug("{} ICMP_REPLIED".format(SystemUnderTest))
-       return True
-    else:
-       # The machine does NOT respond the ICMP request
-       logging.debug("{} ICMP_IGNORED".format(SystemUnderTest))
-       return False
+    try:
+       result = ping(SystemUnderTest, verbose=False, count = Count, interval = 2)
+       if result.success():
+          # The machine responds the ICMP request
+          logging.debug("{} ICMP_REPLIED".format(SystemUnderTest))
+          return True
+       else:
+          # The machine does NOT respond the ICMP request
+          logging.debug("{} ICMP_IGNORED".format(SystemUnderTest))
+          return False
+    except Exception as e:
+          logging.error(f"An error occurred while attempting to ping {SystemUnderTest}: {str(e)}")
 
 
 # Function to reset the System Under Test
