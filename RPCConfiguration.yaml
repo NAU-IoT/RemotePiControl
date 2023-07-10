@@ -1,9 +1,9 @@
 topic: "RemotePiControl" #topic name
 port: YOUR_MQTT_PORT_NUMBER #port to be used by mqtt; IoT Team: use port 31883
-broker: "YOUR BROKER IP/HOSTNAME" #broker DNS resolution or IP address; IoT Team: use localhost, supervisor IP address, or supervisor DNS resolution 
-client1: "YOUR CLIENT IP/HOSTNAME" #client DNS resolution or IP address; IoT Team: use IOBoard IP address or IOBoard DNS resolution
-client2: "YOUR CLIENT IP/HOSTNAME" #client DNS resolution or IP address; IoT Team: use SSD IP address or SSD DNS resolution
-client3: "YOUR CLIENT IP/HOSTNAME" #client DNS resolution or IP address; IoT Team: use jetson IP address or jetson DNS resolution
+broker: "BROKER IP/HOSTNAME" #broker DNS resolution or IP address; IoT Team: use localhost, supervisor IP address, or supervisor DNS resolution 
+client1: "CLIENT IP/HOSTNAME" #client DNS resolution or IP address; IoT Team: use IOBoard IP address or IOBoard DNS resolution
+client2: "CLIENT IP/HOSTNAME" #client DNS resolution or IP address; IoT Team: use Nano IP address or Nano DNS resolution
+client3: "CLIENT IP/HOSTNAME" #client DNS resolution or IP address;
 load1: True #change to true if a load is wired to relay1 (terminals NO1, C1, NC1)
 load2: False #change to true if a load is wired to relay2 (terminals NO2, C2, NC2)
 load3: False #change to true if a load is wired to relay3 (terminals NO3, C3, NC3)
