@@ -51,11 +51,14 @@ def verify_ping(SystemUnderTest, Count):
        if result.success():
           # The machine responds the ICMP request
           logging.debug("{} ICMP_REPLIED".format(SystemUnderTest))
+          return True
        else:
           # The machine does NOT respond the ICMP request
           logging.debug("{} ICMP_IGNORED".format(SystemUnderTest))
+          return False
     except Exception as e:
           logging.error(f"An error occurred while attempting to ping {SystemUnderTest}: {str(e)}")
+          return None
 
 
 # Function to reset the System Under Test
