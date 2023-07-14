@@ -108,7 +108,7 @@ def execute_stop(SystemUnderTest, Timezone, RelayPin, RelayState):
     logging.debug(string0) #print time stamp when stop occurs
     lgpio.gpio_write(h, RelayPin, 1) #set RelayPin pin high
     # Update the RelayState variable in config file
-    config[str(RelayState)] = 1
+    config[RelayState] = 1
     # Save the updated configuration back to the file
     with open('/RPCConfiguration.yaml', 'w') as file:
        yaml.dump(config, file)
@@ -132,7 +132,7 @@ def execute_start(SystemUnderTest, Timezone, RelayPin, RelayState):
     logging.debug(string0) #print time stamp when start occurs
     lgpio.gpio_write(h, RelayPin, 0) #set Relay1Pin low
     # Update the RelayState variable in config file
-    config[str(RelayState)] = 0
+    config[RelayState] = 0
     # Save the updated configuration back to the file
     with open('/RPCConfiguration.yaml', 'w') as file:
        yaml.dump(config, file)
@@ -181,27 +181,27 @@ def on_message(client, userdata, msg):
     if msg.payload.decode() == "resetIOB":
        execute_reset(SystemUnderTest1, Timezone, Relay1Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
     if msg.payload.decode() == "stopIOB":
-       execute_stop(SystemUnderTest1, Timezone, Relay1Pin, Relay1State) # Parameters are (SystemUnderTest, Timezone, RelayPin, RelayState)
+       execute_stop(SystemUnderTest1, Timezone, Relay1Pin, 'Relay1State') # Parameters are (SystemUnderTest, Timezone, RelayPin, RelayState)
     if msg.payload.decode() == "startIOB":
-       execute_start(SystemUnderTest1, Timezone, Relay1Pin, Relay1State) # Parameters are (SystemUnderTest, Timezone, RelayPin, RelayState)
+       execute_start(SystemUnderTest1, Timezone, Relay1Pin, 'Relay1State') # Parameters are (SystemUnderTest, Timezone, RelayPin, RelayState)
     if msg.payload.decode() == "statusIOB":
        execute_status(SystemUnderTest1, Timezone, Relay1Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
   if(Load2):
     if msg.payload.decode() == "resetNANO":
        execute_reset(SystemUnderTest2, Timezone, Relay2Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
     if msg.payload.decode() == "stopNANO":
-       execute_stop(SystemUnderTest2, Timezone, Relay2Pin, Relay2State) # Parameters are (SystemUnderTest, Timezone, RelayPin, RelayState)
+       execute_stop(SystemUnderTest2, Timezone, Relay2Pin, 'Relay2State') # Parameters are (SystemUnderTest, Timezone, RelayPin, RelayState)
     if msg.payload.decode() == "startNANO":
-       execute_start(SystemUnderTest2, Timezone, Relay2Pin, Relay2State) # Parameters are (SystemUnderTest, Timezone, RelayPin, RelayState)
+       execute_start(SystemUnderTest2, Timezone, Relay2Pin, 'Relay2State') # Parameters are (SystemUnderTest, Timezone, RelayPin, RelayState)
     if msg.payload.decode() == "statusNANO":
        execute_status(SystemUnderTest2, Timezone, Relay2Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
   if(Load3):
     if msg.payload.decode() == "resetOPT":
        execute_reset(SystemUnderTest3, Timezone, Relay3Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
     if msg.payload.decode() == "stopOPT":
-       execute_stop(SystemUnderTest3, Timezone, Relay3Pin, Relay3State) # Parameters are (SystemUnderTest, Timezone, RelayPin, RelayState)
+       execute_stop(SystemUnderTest3, Timezone, Relay3Pin, 'Relay3State') # Parameters are (SystemUnderTest, Timezone, RelayPin, RelayState)
     if msg.payload.decode() == "startOPT":
-       execute_start(SystemUnderTest3, Timezone, Relay3Pin, Relay3State) # Parameters are (SystemUnderTest, Timezone, RelayPin, RelayState)
+       execute_start(SystemUnderTest3, Timezone, Relay3Pin, 'Relay3State') # Parameters are (SystemUnderTest, Timezone, RelayPin, RelayState)
     if msg.payload.decode() == "statusOPT":
        execute_status(SystemUnderTest3, Timezone, Relay3Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
   if msg.payload.decode() == "resetall":
@@ -213,18 +213,18 @@ def on_message(client, userdata, msg):
        execute_reset(SystemUnderTest3, Timezone, Relay3Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
   if msg.payload.decode() == "stopall":
     if(Load1):
-       execute_stop(SystemUnderTest1, Timezone, Relay1Pin, Relay1State) # Parameters are (SystemUnderTest, Timezone, RelayPin, RelayState)
+       execute_stop(SystemUnderTest1, Timezone, Relay1Pin, 'Relay1State') # Parameters are (SystemUnderTest, Timezone, RelayPin, RelayState)
     if(Load2):
-       execute_stop(SystemUnderTest2, Timezone, Relay2Pin, Relay2State) # Parameters are (SystemUnderTest, Timezone, RelayPin, RelayState)
+       execute_stop(SystemUnderTest2, Timezone, Relay2Pin, 'Relay2State') # Parameters are (SystemUnderTest, Timezone, RelayPin, RelayState)
     if(Load3):
-       execute_stop(SystemUnderTest3, Timezone, Relay3Pin, Relay3State) # Parameters are (SystemUnderTest, Timezone, RelayPin, RelayState)
+       execute_stop(SystemUnderTest3, Timezone, Relay3Pin, 'Relay3State') # Parameters are (SystemUnderTest, Timezone, RelayPin, RelayState)
   if msg.payload.decode() == "startall":
     if(Load1):
-       execute_start(SystemUnderTest1, Timezone, Relay1Pin, Relay1State) # Parameters are (SystemUnderTest, Timezone, RelayPin, RelayState)
+       execute_start(SystemUnderTest1, Timezone, Relay1Pin, 'Relay1State') # Parameters are (SystemUnderTest, Timezone, RelayPin, RelayState)
     if(Load2):
-       execute_start(SystemUnderTest2, Timezone, Relay2Pin, Relay2State) # Parameters are (SystemUnderTest, Timezone, RelayPin, RelayState)
+       execute_start(SystemUnderTest2, Timezone, Relay2Pin, 'Relay2State') # Parameters are (SystemUnderTest, Timezone, RelayPin, RelayState)
     if(Load3):
-       execute_start(SystemUnderTest3, Timezone, Relay3Pin, Relay3State) # Parameters are (SystemUnderTest, Timezone, RelayPin, RelayState)
+       execute_start(SystemUnderTest3, Timezone, Relay3Pin, 'Relay3State') # Parameters are (SystemUnderTest, Timezone, RelayPin, RelayState)
   if msg.payload.decode() == "statusall":
     if(Load1):
        execute_status(SystemUnderTest1, Timezone, Relay1Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
