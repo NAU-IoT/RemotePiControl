@@ -1,13 +1,16 @@
-topic: "RemotePiControl" #topic name
-port: YOUR_MQTT_PORT_NUMBER #port to be used by mqtt; IoT Team: use port 31883
-broker: "BROKER IP/HOSTNAME" #broker DNS resolution or IP address; IoT Team: use localhost, supervisor IP address, or supervisor DNS resolution 
-client1: "CLIENT IP/HOSTNAME" #client DNS resolution or IP address; IoT Team: use IOBoard IP address or IOBoard DNS resolution
-client2: "CLIENT IP/HOSTNAME" #client DNS resolution or IP address; IoT Team: use Nano IP address or Nano DNS resolution
-client3: "CLIENT IP/HOSTNAME" #client DNS resolution or IP address;
-load1: True #change to true if a load is wired to relay1 (terminals NO1, C1, NC1)
-load2: False #change to true if a load is wired to relay2 (terminals NO2, C2, NC2)
-load3: False #change to true if a load is wired to relay3 (terminals NO3, C3, NC3)
-cacert: "/SOME/PATH/TO/YOUR_CAFILE.crt" #path to cafile, leave as is if not using keys
-certfile: "/SOME/PATH/TO/YOUR_CERTFILE.crt" #path to certfile, leave as is if not using keys
-keyfile: "/SOME/PATH/TO/YOUR_KEYFILE.key" #path to keyfile, leave as is if not using keys
-timezone: 'US/Arizona' #timezone for timestamps, consult pytz list of timezones for acceptable timezones
+topic: "RemotePiControl" # Topic name
+port: YOUR_MQTT_PORT_NUMBER # Port to be used by mqtt; IoT Team: use port 31883
+broker: "BROKER IP/HOSTNAME" # Broker DNS resolution or IP address; IoT Team: use localhost, supervisor IP address, or supervisor DNS resolution 
+client1: "CLIENT IP/HOSTNAME" # Client DNS resolution or IP address; IoT Team: use IOBoard IP address or IOBoard DNS resolution
+client2: "CLIENT IP/HOSTNAME" # Client DNS resolution or IP address; IoT Team: use Nano IP address or Nano DNS resolution
+client3: "CLIENT IP/HOSTNAME" # Client DNS resolution or IP address;
+load1: True # Change to true if a load is wired to relay1 (terminals NO1, C1, NC1)
+load2: False # Change to true if a load is wired to relay2 (terminals NO2, C2, NC2)
+load3: False # Change to true if a load is wired to relay3 (terminals NO3, C3, NC3)
+Relay1State: 0 # Initial state of Relay 1, 0=closed (allow power), 1=open (cut power)
+Relay2State: 0 # Initial state of Relay 2, 0=closed (allow power), 1=open (cut power)
+Relay3State: 0 # Initial state of Relay 3, 0=closed (allow power), 1=open (cut power)
+timezone: 'US/Arizona' # Timezone for timestamps, consult pytz list of timezones for acceptable timezones
+cacert: "/SOME/PATH/TO/YOUR_CAFILE.crt" # Path to cafile, leave as is if not using keys
+certfile: "/SOME/PATH/TO/YOUR_CERTFILE.crt" # Path to certfile, leave as is if not using keys
+keyfile: "/SOME/PATH/TO/YOUR_KEYFILE.key" # Path to keyfile, leave as is if not using keys
