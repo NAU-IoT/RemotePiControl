@@ -9,7 +9,11 @@ import pytz
 import time
 import yaml
 
+
 def load_config():
+   # Globalize config variable so relay states can be updated throughout script
+   global config
+   
    # Load the YAML file
    with open('/RPCConfiguration.yaml', 'r') as file:
        config = yaml.safe_load(file)
@@ -27,7 +31,10 @@ def load_config():
    global Certfile
    global Keyfile
    global Timezone
-
+   global Relay1State
+   global Relay2State
+   global Relay3State
+   
    # Import variables from config file
    Topic = config['topic']
    Port = config['port']
@@ -42,8 +49,18 @@ def load_config():
    Certfile = config['certfile']
    Keyfile = config['keyfile']
    Timezone = config['timezone']
+   Relay1State = config['Relay1State']
+   Relay2State = config['Relay2State']
+   Relay3State = config['Relay3State']
 
 
+# Function to set relays to the value in the configuration file, 1 or 0 
+def initialize_relays():
+   lgpio.gpio_write(h, Relay1Pin, Relay1State) #set Relay1Pin to config file state
+   lgpio.gpio_write(h, Relay2Pin, Relay2State) #set Relay2Pin to config file state
+   lgpio.gpio_write(h, Relay3Pin, Relay3State) #set Relay1Pin to config file state
+
+   
 # Function to ping System Under Test to see if it is responding
 def verify_ping(SystemUnderTest, Count):
     try:
@@ -84,12 +101,17 @@ def execute_reset(SystemUnderTest, Timezone, RelayPin):
 
 
 # Function to stop the System Under Test
-def execute_stop(SystemUnderTest, Timezone, RelayPin):
+def execute_stop(SystemUnderTest, Timezone, RelayPin, RelayState):
     ts = datetime.now(pytz.timezone(Timezone))
     tsString = str(ts)
     string0 = "\nStop executed at: {}\n".format(tsString) #formats string with timestamp
     logging.debug(string0) #print time stamp when stop occurs
-    lgpio.gpio_write(h, RelayPin, 1) #set Relay1Pin pin high
+    lgpio.gpio_write(h, RelayPin, 1) #set RelayPin pin high
+    # Update the RelayState variable in config file
+    config[RelayState] = 1
+    # Save the updated configuration back to the file
+    with open('/RPCConfiguration.yaml', 'w') as file:
+       yaml.dump(config, file)
     string1 = "{} has been stopped".format(SystemUnderTest) #formats string with hostname
     logging.debug(string1) #prints string 1 with hostname
     logging.debug("Verifying stop was executed...")
@@ -103,12 +125,17 @@ def execute_stop(SystemUnderTest, Timezone, RelayPin):
 
 
 # Function to start the System Under Test
-def execute_start(SystemUnderTest, Timezone, RelayPin):
+def execute_start(SystemUnderTest, Timezone, RelayPin, RelayState):
     ts = datetime.now(pytz.timezone(Timezone))
     tsString = str(ts)
     string0 = "\nStart executed at: {}\n".format(tsString) #formats string with timestamp
     logging.debug(string0) #print time stamp when start occurs
     lgpio.gpio_write(h, RelayPin, 0) #set Relay1Pin low
+    # Update the RelayState variable in config file
+    config[RelayState] = 0
+    # Save the updated configuration back to the file
+    with open('/RPCConfiguration.yaml', 'w') as file:
+       yaml.dump(config, file)
     string1 = "{} has been started".format(SystemUnderTest) #formats string with hostname
     logging.debug(string1) #prints string 1 with hostname
     logging.debug("Verifying start was executed...")
@@ -154,27 +181,27 @@ def on_message(client, userdata, msg):
     if msg.payload.decode() == "resetIOB":
        execute_reset(SystemUnderTest1, Timezone, Relay1Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
     if msg.payload.decode() == "stopIOB":
-       execute_stop(SystemUnderTest1, Timezone, Relay1Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
+       execute_stop(SystemUnderTest1, Timezone, Relay1Pin, 'Relay1State') # Parameters are (SystemUnderTest, Timezone, RelayPin, RelayState)
     if msg.payload.decode() == "startIOB":
-       execute_start(SystemUnderTest1, Timezone, Relay1Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
+       execute_start(SystemUnderTest1, Timezone, Relay1Pin, 'Relay1State') # Parameters are (SystemUnderTest, Timezone, RelayPin, RelayState)
     if msg.payload.decode() == "statusIOB":
        execute_status(SystemUnderTest1, Timezone, Relay1Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
   if(Load2):
     if msg.payload.decode() == "resetNANO":
        execute_reset(SystemUnderTest2, Timezone, Relay2Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
     if msg.payload.decode() == "stopNANO":
-       execute_stop(SystemUnderTest2, Timezone, Relay2Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
+       execute_stop(SystemUnderTest2, Timezone, Relay2Pin, 'Relay2State') # Parameters are (SystemUnderTest, Timezone, RelayPin, RelayState)
     if msg.payload.decode() == "startNANO":
-       execute_start(SystemUnderTest2, Timezone, Relay2Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
+       execute_start(SystemUnderTest2, Timezone, Relay2Pin, 'Relay2State') # Parameters are (SystemUnderTest, Timezone, RelayPin, RelayState)
     if msg.payload.decode() == "statusNANO":
        execute_status(SystemUnderTest2, Timezone, Relay2Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
   if(Load3):
     if msg.payload.decode() == "resetOPT":
        execute_reset(SystemUnderTest3, Timezone, Relay3Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
     if msg.payload.decode() == "stopOPT":
-       execute_stop(SystemUnderTest3, Timezone, Relay3Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
+       execute_stop(SystemUnderTest3, Timezone, Relay3Pin, 'Relay3State') # Parameters are (SystemUnderTest, Timezone, RelayPin, RelayState)
     if msg.payload.decode() == "startOPT":
-       execute_start(SystemUnderTest3, Timezone, Relay3Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
+       execute_start(SystemUnderTest3, Timezone, Relay3Pin, 'Relay3State') # Parameters are (SystemUnderTest, Timezone, RelayPin, RelayState)
     if msg.payload.decode() == "statusOPT":
        execute_status(SystemUnderTest3, Timezone, Relay3Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
   if msg.payload.decode() == "resetall":
@@ -186,18 +213,18 @@ def on_message(client, userdata, msg):
        execute_reset(SystemUnderTest3, Timezone, Relay3Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
   if msg.payload.decode() == "stopall":
     if(Load1):
-       execute_stop(SystemUnderTest1, Timezone, Relay1Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
+       execute_stop(SystemUnderTest1, Timezone, Relay1Pin, 'Relay1State') # Parameters are (SystemUnderTest, Timezone, RelayPin, RelayState)
     if(Load2):
-       execute_stop(SystemUnderTest2, Timezone, Relay2Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
+       execute_stop(SystemUnderTest2, Timezone, Relay2Pin, 'Relay2State') # Parameters are (SystemUnderTest, Timezone, RelayPin, RelayState)
     if(Load3):
-       execute_stop(SystemUnderTest3, Timezone, Relay3Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
+       execute_stop(SystemUnderTest3, Timezone, Relay3Pin, 'Relay3State') # Parameters are (SystemUnderTest, Timezone, RelayPin, RelayState)
   if msg.payload.decode() == "startall":
     if(Load1):
-       execute_start(SystemUnderTest1, Timezone, Relay1Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
+       execute_start(SystemUnderTest1, Timezone, Relay1Pin, 'Relay1State') # Parameters are (SystemUnderTest, Timezone, RelayPin, RelayState)
     if(Load2):
-       execute_start(SystemUnderTest2, Timezone, Relay2Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
+       execute_start(SystemUnderTest2, Timezone, Relay2Pin, 'Relay2State') # Parameters are (SystemUnderTest, Timezone, RelayPin, RelayState)
     if(Load3):
-       execute_start(SystemUnderTest3, Timezone, Relay3Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
+       execute_start(SystemUnderTest3, Timezone, Relay3Pin, 'Relay3State') # Parameters are (SystemUnderTest, Timezone, RelayPin, RelayState)
   if msg.payload.decode() == "statusall":
     if(Load1):
        execute_status(SystemUnderTest1, Timezone, Relay1Pin) # Parameters are (SystemUnderTest, Timezone, RelayPin)
@@ -208,10 +235,11 @@ def on_message(client, userdata, msg):
 
 
 def main():
-    # Load configuration
-    load_config()
     #enable logging
     logging.basicConfig(level=logging.DEBUG)
+   
+    # Load configuration
+    load_config()
 
     # Globalize variables
     global Relay1Pin
@@ -227,6 +255,9 @@ def main():
     lgpio.gpio_claim_output(h, Relay1Pin) #set Relay1Pin as output
     lgpio.gpio_claim_output(h, Relay2Pin) #set Relay2Pin as output
     lgpio.gpio_claim_output(h, Relay3Pin) #set Relay3Pin as output
+
+    # Initialize relays to state in config file
+    initialize_relays()
     
     #create client instance
     client = mqtt.Client()
