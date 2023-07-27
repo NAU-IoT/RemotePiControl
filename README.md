@@ -264,21 +264,21 @@ chmod +x RemotePiControl.py
    WITHOUT TLS: 
    
    ```
-   mosquitto_pub -p PORT_NUMBER -t YOUR_TOPIC -h YOUR_BROKER_IP -m "reset/start/stop/status"
+   mosquitto_pub -p PORT_NUMBER -t YOUR_TOPIC -h YOUR_BROKER_IP -m "resetIOB/startIOB/stopIOB/statusIOB"
    ```
    
    example command:
    ```
-   mosquitto_pub -p 1883 -t RemotePiControl -h localhost -m "reset"
+   mosquitto_pub -p 1883 -t RemotePiControl -h localhost -m "resetIOB"
    ```
    
    WITH TLS: 
    ```
-   mosquitto_pub --cafile YOUR_CAFILE.crt --cert YOUR_CERTFILE.crt --key YOUR_KEYFILE.key -p 8883 -d -h YOUR_BROKER_IP -t YOUR_TOPIC -m "reset/start/stop/status"
+   mosquitto_pub --cafile YOUR_CAFILE.crt --cert YOUR_CERTFILE.crt --key YOUR_KEYFILE.key -p 8883 -d -h YOUR_BROKER_IP -t YOUR_TOPIC -m "resetIOB/startIOB/stopIOB/statusIOB"
    ```
    example command:
    ```
-   mosquitto_pub --cafile /home/michael/cafile.crt --cert /home/michael/certfile.crt --key /home/michael/keyfile.key -p 8883 -d -h localhost -t RemotePiControl -m "reset"
+   mosquitto_pub --cafile /home/michael/cafile.crt --cert /home/michael/certfile.crt --key /home/michael/keyfile.key -p 8883 -d -h localhost -t RemotePiControl -m "resetIOB"
    ```
 
 - Done!
