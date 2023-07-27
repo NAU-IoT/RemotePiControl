@@ -43,6 +43,5 @@ RUN chmod +x /RemotePiControl.sh
 CMD service mosquitto start \
     && sleep 5 \
     && cron \
-#Uncomment the line below and comment out the above line for debugging, otherwise script will not execute until midnight
-#    && ./RemotePiControl.sh \ 
+    && ./RemotePiControl.sh \ 
     && bash
